@@ -28,11 +28,15 @@ namespace lsp
     {
         //---------------------------------------------------------------------
         // Plugin UI factory
-        static const meta::plugin_t *uis[] =
+        static const meta::plugin_t *plugin_uis[] =
         {
+            &meta::crossover_mono,
+            &meta::crossover_stereo,
+            &meta::crossover_lr,
+            &meta::crossover_ms
         };
 
-        static ui::Factory factory(uis, 0);
+        static ui::Factory factory(plugin_uis, 4);
 
     } // namespace plugui
 } // namespace lsp
