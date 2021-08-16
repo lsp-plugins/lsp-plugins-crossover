@@ -21,7 +21,7 @@
 # Package version
 ARTIFACT_ID                 = LSP_PLUGINS_CROSSOVER
 ARTIFACT_NAME               = lsp-plugins-crossover
-ARTIFACT_DESC               = Trigger plugin series
+ARTIFACT_DESC               = Crossover plugin series
 ARTIFACT_HEADERS            = lsp-plug.in
 ARTIFACT_EXPORT_ALL         = 1
 ARTIFACT_VERSION            = 1.0.1-devel
