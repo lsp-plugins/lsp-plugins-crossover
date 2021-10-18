@@ -4,21 +4,21 @@
 			<!-- Signal meters -->
 			<hbox spacing="4">
 				<meter expand="true"
-					id="ilm" angle="0"
-				    type="rms_peak"
+					id="ilm_l" id2="ilm_r"
+					stereo="true" type="rms_peak"
+					angle="0"
 					min="-36 db" max="+6 db" 
-					color="middle_channel"
+					color="left_channel" color2="right_channel"
 				/>
-				
 				<label text="labels.input:db" />
 				<void min_width="64" />
 				<label text="labels.output:db" />
-				
 				<meter expand="true"
-					id="olm" angle="0"
-				    type="rms_peak"
+					id="olm_l" id2="olm_r"
+					stereo="true" type="rms_peak"
+					angle="0"
 					min="-36 db" max="+6 db" 
-					color="middle_channel"
+					color="left_channel" color2="right_channel"
 				/>
 			</hbox>
 		
@@ -73,8 +73,10 @@
 					<mesh id="bfc_${i}" color="eq_base" width="2" hue_id="hue_${i}" visibility=":flt and (:frs_${i} igt 0)" fill="0.8" smooth="true" />
 				</ui:for>
 				
-				<mesh id="ifg" width="3" color="middle_channel_in" visibility=":ife" />
-				<mesh id="ofg" width="3" color="middle_channel"  visibility=":ofe" />
+				<mesh id="ifg_l" width="3" color="left_channel_in" visibility=":ife_l" />
+				<mesh id="ifg_r" width="3" color="right_channel_in" visibility=":ife_r" />
+				<mesh id="ofg_l" width="3" color="left_channel"  visibility=":ofe_l" />
+				<mesh id="ofg_r" width="3" color="right_channel"  visibility=":ofe_r" />
 				
 				<mesh id="ag" color="middle_channel" width="3" smooth="true" visibility=":crv" />
 				
@@ -122,9 +124,15 @@
 			
 			<hbox spacing="4">
 				<label text="labels.fft.fft:" />
-				<button id="ife" size="16" color="middle_channel" led="true" />
+				<hbox>
+					<button id="ife_l" size="16" color="left_channel" text="labels.chan.L_eft" font_size="8" led="true" />
+					<button id="ife_r" size="16" color="right_channel" text="labels.chan.R_ight" font_size="8"  led="true" />
+				</hbox>
 				<label text="labels.chan.in" />
-				<button id="ofe" size="16" color="middle_channel" led="true" />
+				<hbox>
+					<button id="ofe_l" size="16" color="left_channel" text="labels.chan.L_eft" font_size="8" led="true" />
+					<button id="ofe_r" size="16" color="right_channel" text="labels.chan.R_ight" font_size="8" led="true" />
+				</hbox>
 				<label text="labels.chan.out" />
 				<vsep />
 				<button id="flt" size="16" color="green" led="true" />
@@ -168,7 +176,7 @@
 						<!-- Bands 0-7 -->
 						<ui:for id="i" first="0" last="7">
 							<!-- Separator -->
-							<ui:if test="${:i igt 0}">
+							<ui:if test=":i igt 0">
 								<cell rows="12">
 									<vsep />
 								</cell>
@@ -180,16 +188,16 @@
 							</cell>
 							
 							<!-- Slope selector -->
-							<ui:if test="${:i ieq 0}">
+							<ui:if test=":i ieq 0">
 								<cell cols="2"><void /></cell>
 							</ui:if>
-							<ui:if test="${:i igt 0}">
+							<ui:if test=":i igt 0">
 								<cell cols="2"><combo id="frs_${i}" /></cell>
 							</ui:if>
 							
-							<!-- Band #i -->
+							<!-- Band parameters -->
 							<ui:attributes ui:recurision="-1" bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1 : 0.5">
-								<ui:if test="${:i ieq 0}">
+								<ui:if test=":i ieq 0">
 									<cell cols="2" fill="false">
 										<vbox>
 											<label text="0" />
@@ -197,7 +205,7 @@
 										</vbox>
 									</cell>
 								</ui:if>
-								<ui:if test="${:i igt 0}">
+								<ui:if test=":i igt 0">
 									<knob id="sf_${i}" size="16" scale_hue_id="hue_${i}" />
 								</ui:if>
 								<knob id="bg_${i}" scale_hue_id="hue_${i}" />
@@ -209,7 +217,7 @@
 								<value id="bd_${i}" detailed="false" />
 								<knob id="hue_${i}" size="16" scale_hue_id="hue_${i}" />
 								<value id="hue_${i}" detailed="false" />
-								<ui:if test="${:i igt 0}">
+								<ui:if test=":i igt 0">
 									<vbox>
 										<value id="sf_${i}" visibility=":frs_${i} igt 0" detailed="false" />
 										<value id="fre_${i}" visibility=":frs_${i} igt 0" detailed="false" />
@@ -217,8 +225,9 @@
 									</vbox>
 								</ui:if>
 								<cell rows="9">
-									<meter id="blm_${i}" angle="1"
-										color="middle_channel"
+									<meter id="blm_${i}l" id2="blm_${i}r"
+										angle="1" stereo="true"
+										color="left_channel" color2="right_channel"
 										logarithmic="true" type="rms_peak"
 										min="-72 db" max="12 db" height="64"
 									/>
