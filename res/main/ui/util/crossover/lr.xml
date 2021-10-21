@@ -143,7 +143,7 @@
 					<label text="labels.chan.out" pad.b="3" pad.t="3"/>
 					<ledmeter vexpand="true" angle="1">
 						<ledchannel id="olm_l" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="left"/>
-						<ledchannel id="olm_l" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="right"/>
+						<ledchannel id="olm_r" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="right"/>
 					</ledmeter>
 				</vbox>
 			</cell>
