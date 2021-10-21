@@ -82,7 +82,7 @@
 					<mesh id="ifg_m" width="3" color="mid_in" visibility=":ife_m"/>
 					<mesh id="ifg_s" width="3" color="side_in" visibility=":ife_s"/>
 					<mesh id="ofg_m" width="3" color="mid" visibility=":ofe_m"/>
-					<mesh id="ofg_s" width="3" color="side" visibility=":ofe_m"/>
+					<mesh id="ofg_s" width="3" color="side" visibility=":ofe_s"/>
 
 					<mesh id="ag_m" width="3" color="mid" smooth="true" visibility=":crv_m"/>
 					<mesh id="ag_s" width="3" color="side" smooth="true" visibility=":crv_s"/>
@@ -208,7 +208,7 @@
 
 			<!-- bottom line -->
 			<align halign="1" vreduce="true">
-				<hbox spacing="4" vreduce="true" bg.color="bg_schema" pad.h="6" pad.v="6">
+				<hbox spacing="4" vreduce="true" bg.color="bg_schema" pad.h="6" pad.v="4">
 					<label text="labels.filters" pad.l="6"/>
 					<hbox spacing="4" pad.h="6">
 						<button id="flt_m" text="labels.chan.M_id" size="22" ui:inject="Button_mid"/>
