@@ -325,7 +325,9 @@
 
 						<!-- c5 -->
 						<cell rows="4" hreduce="true">
-							<ledmeter angle="1" bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken">
+							<ledmeter angle="1"
+								bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken"
+								bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : 0.75">
 								<ledchannel
 									id="blm_${ichp}"
 									min="-72 db"
@@ -333,9 +335,8 @@
 									log="true"
 									type="rms_peak"
 									peak.visibility="true"
-									value.color="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? '${chc}' : '${chc}_inactive'"
-									bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : 0.75"
-									bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken"/>
+									value.color="${chc}"
+								/>
 							</ledmeter>
 						</cell>
 					</ui:for>
