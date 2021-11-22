@@ -151,7 +151,7 @@ namespace lsp
                 explicit crossover(const meta::plugin_t *metadata, size_t mode);
                 virtual ~crossover();
 
-                virtual void        init(plug::IWrapper *wrapper);
+                virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports);
                 virtual void        destroy();
 
             public:
