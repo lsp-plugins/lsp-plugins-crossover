@@ -434,6 +434,15 @@ namespace lsp
             PORTS_END
         };
 
+        const meta::bundle_t crossover_bundle =
+        {
+            "crossover",
+            "Crossover",
+            B_MB_PROCESSING,
+            "g8cShrKtmKo",
+            "This plugin performs split of input signal into separate frequency\nbands passed to individual output channels. Additinally it provides\noutput monitoring channel to control individual channels or result of\nsumming signals passed to individual mono output channels."
+        };
+
         // Crossover
         const meta::plugin_t crossover_mono =
         {
@@ -453,7 +462,8 @@ namespace lsp
             crossover_mono_ports,
             "util/crossover/mono.xml",
             NULL,
-            xover_mono_port_groups
+            xover_mono_port_groups,
+            &crossover_bundle
         };
 
         const meta::plugin_t  crossover_stereo =
@@ -474,7 +484,8 @@ namespace lsp
             crossover_stereo_ports,
             "util/crossover/stereo.xml",
             NULL,
-            xover_stereo_port_groups
+            xover_stereo_port_groups,
+            &crossover_bundle
         };
 
         const meta::plugin_t  crossover_lr =
@@ -495,7 +506,8 @@ namespace lsp
             crossover_lr_ports,
             "util/crossover/lr.xml",
             NULL,
-            xover_stereo_port_groups
+            xover_stereo_port_groups,
+            &crossover_bundle
         };
 
         const meta::plugin_t  crossover_ms =
@@ -516,7 +528,8 @@ namespace lsp
             crossover_ms_ports,
             "util/crossover/ms.xml",
             NULL,
-            xover_ms_port_groups
+            xover_ms_port_groups,
+            &crossover_bundle
         };
     } // namespace meta
 } // namespace lsp
