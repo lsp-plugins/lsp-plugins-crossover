@@ -1,0 +1,18 @@
+{
+	"crossover": {
+		"sel": {
+			"left": "Processore Sinistro",
+			"mid": "Processore Centrale",
+			"right": "Processore Destro",
+			"side": "Processore Laterale"
+		},
+		"slope": {
+			"24dbo": "24 dB/ott",
+			"48dbo": "48 dB/ott",
+			"72dbo": "72 dB/ott",
+			"96dbo": "96 dB/ott",
+			"off": "Off"
+		}
+	}
+}
+

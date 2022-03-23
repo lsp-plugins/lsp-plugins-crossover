@@ -1,0 +1,7 @@
+{
+	"crossover": {
+		"name": "Crossover",
+		"description": "This plugin performs split of input signal into separate frequency\nbands passed to individual output channels. Additinally it provides\noutput monitoring channel to control individual channels or result of\nsumming signals passed to individual mono output channels."
+	}
+}
+
