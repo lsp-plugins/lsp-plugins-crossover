@@ -1,7 +1,7 @@
 {
 	"crossover": {
 		"name": "Crossover",
-		"description": "Dieses Plugin spaltet das Inputsignal in einzelne Frequenzbänder\ndie an einzelne Outputkanäle weitergegeben werden. Zusätzlich stellt es einen\nOutput-Monitoring-Kanal zur Verfügung um einzelne Kanäle bzw. die \nSumme mehrerer Monokanäle zu steuern."
+		"description": "Dieses Plugin spaltet das Inputsignal in einzelne Frequenzbänder,\ndie an separate Outputkanäle weitergegeben werden. Zusätzlich stellt es einen\nOutput-Monitoring-Kanal zur Verfügung um einzelne Kanäle bzw. die \nSumme mehrerer Monokanäle zu steuern."
 	}
 }
 
