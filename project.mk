@@ -25,3 +25,6 @@ ARTIFACT_TYPE               = plug
 ARTIFACT_DESC               = LSP Crossover Plugin Series
 ARTIFACT_HEADERS            = lsp-plug.in
 ARTIFACT_VERSION            = 1.0.4-devel
+
+
+
