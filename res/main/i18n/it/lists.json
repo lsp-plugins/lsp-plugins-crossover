@@ -7,10 +7,10 @@
 			"side": "Processore Laterale"
 		},
 		"slope": {
-			"24dbo": "24 dB/ott",
-			"48dbo": "48 dB/ott",
-			"72dbo": "72 dB/ott",
-			"96dbo": "96 dB/ott",
+			"24dbo": "LR4 (24 dB/ott)",
+			"48dbo": "LR8 (48 dB/ott)",
+			"72dbo": "LR12 (72 dB/ott)",
+			"96dbo": "LR16 (96 dB/ott)",
 			"off": "Off"
 		}
 	}
