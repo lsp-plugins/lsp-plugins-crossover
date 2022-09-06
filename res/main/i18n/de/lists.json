@@ -7,10 +7,10 @@
 			"side": "Processor Seite"
 		},
 		"slope": {
-			"24dbo": "24 dB/Okt",
-			"48dbo": "48 dB/Okt",
-			"72dbo": "72 dB/Okt",
-			"96dbo": "96 dB/Okt",
+			"24dbo": "LR4 (24 dB/Okt)",
+			"48dbo": "LR8 (48 dB/Okt)",
+			"72dbo": "LR12 (72 dB/Okt)",
+			"96dbo": "LR16 (96 dB/Okt)",
 			"off": "Aus"
 		}
 	}
