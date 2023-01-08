@@ -522,7 +522,7 @@ namespace lsp
         {
             "Frequenzweiche MidSide x8",
             "Crossover MidSide x8",
-            "FW8LR",
+            "FW8MS",
             &developers::v_sadovnikov,
             "crossover_ms",
             LSP_LV2_URI("crossover_ms"),
