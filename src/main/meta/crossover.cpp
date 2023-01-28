@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       6
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       7
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -40,7 +40,9 @@ namespace lsp
     {
         //-------------------------------------------------------------------------
         // Crossover plugin
-        static const int crossover_classes[]        =   { C_UTILITY, -1 };
+        static const int plugin_classes[]           = { C_UTILITY, -1 };
+        static const int clap_features_mono[]       = { CF_AUDIO_EFFECT, CF_UTILITY, CF_MONO, -1 };
+        static const int clap_features_stereo[]     = { CF_AUDIO_EFFECT, CF_UTILITY, CF_STEREO, -1 };
 
         static const port_item_t crossover_selector_lr[] =
         {
@@ -456,8 +458,10 @@ namespace lsp
             "rmnv",
             LSP_LADSPA_CROSSOVER_BASE + 0,
             LSP_LADSPA_URI("crossover_mono"),
+            LSP_CLAP_URI("crossover_mono"),
             LSP_PLUGINS_CROSSOVER_VERSION,
-            crossover_classes,
+            plugin_classes,
+            clap_features_mono,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_mono_ports,
             "util/crossover/mono.xml",
@@ -478,8 +482,10 @@ namespace lsp
             "ooqb",
             LSP_LADSPA_CROSSOVER_BASE + 1,
             LSP_LADSPA_URI("crossover_stereo"),
+            LSP_CLAP_URI("crossover_stereo"),
             LSP_PLUGINS_CROSSOVER_VERSION,
-            crossover_classes,
+            plugin_classes,
+            clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_stereo_ports,
             "util/crossover/stereo.xml",
@@ -500,8 +506,10 @@ namespace lsp
             "wvbr",
             LSP_LADSPA_CROSSOVER_BASE + 2,
             LSP_LADSPA_URI("crossover_lr"),
+            LSP_CLAP_URI("crossover_lr"),
             LSP_PLUGINS_CROSSOVER_VERSION,
-            crossover_classes,
+            plugin_classes,
+            clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_lr_ports,
             "util/crossover/lr.xml",
@@ -514,7 +522,7 @@ namespace lsp
         {
             "Frequenzweiche MidSide x8",
             "Crossover MidSide x8",
-            "FW8LR",
+            "FW8MS",
             &developers::v_sadovnikov,
             "crossover_ms",
             LSP_LV2_URI("crossover_ms"),
@@ -522,8 +530,10 @@ namespace lsp
             "vlqv",
             LSP_LADSPA_CROSSOVER_BASE + 3,
             LSP_LADSPA_URI("crossover_ms"),
+            LSP_CLAP_URI("crossover_ms"),
             LSP_PLUGINS_CROSSOVER_VERSION,
-            crossover_classes,
+            plugin_classes,
+            clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_ms_ports,
             "util/crossover/ms.xml",
