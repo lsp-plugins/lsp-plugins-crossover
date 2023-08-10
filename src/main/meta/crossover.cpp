@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2021 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2021 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -94,8 +94,8 @@ namespace lsp
         #define XOVER_FFT_METERS(id, label) \
                 SWITCH("ife" id, "Input FFT graph enable" label, 1.0f), \
                 SWITCH("ofe" id, "Output FFT graph enable" label, 1.0f), \
-                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS), \
-                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS)
+                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
+                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
 
         #define XOVER_CHANNEL_METERS(id, label) \
                 METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
@@ -549,5 +549,5 @@ namespace lsp
             xover_ms_port_groups,
             &crossover_bundle
         };
-    } // namespace meta
-} // namespace lsp
+    } /* namespace meta */
+} /* namespace lsp */

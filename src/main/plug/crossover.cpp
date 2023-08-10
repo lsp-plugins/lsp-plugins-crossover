@@ -958,7 +958,7 @@ namespace lsp
                     c->bSyncCurve       = false;
                 }
 
-                // Sync outputf for each band
+                // Sync output for each band
                 for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                 {
                     xover_band_t *b     = &c->vBands[j];
@@ -985,11 +985,17 @@ namespace lsp
                 mesh        = ((sAnalyzer.channel_active(c->nAnInChannel)) && (c->pFftIn != NULL)) ? c->pFftIn->buffer<plug::mesh_t>() : NULL;
                 if ((mesh != NULL) && (mesh->isEmpty()))
                 {
-                    dsp::copy(mesh->pvData[0], vFreqs, meta::crossover_metadata::MESH_POINTS);
-                    sAnalyzer.get_spectrum(c->nAnInChannel, mesh->pvData[1], vIndexes, meta::crossover_metadata::MESH_POINTS);
+                    // Add extra points
+                    mesh->pvData[0][0] = SPEC_FREQ_MIN*0.5f;
+                    mesh->pvData[0][meta::crossover_metadata::MESH_POINTS+1] = SPEC_FREQ_MAX * 2.0f;
+                    mesh->pvData[1][0] = 0.0f;
+                    mesh->pvData[1][meta::crossover_metadata::MESH_POINTS+1] = 0.0f;
+
+                    dsp::copy(&mesh->pvData[0][1], vFreqs, meta::crossover_metadata::MESH_POINTS);
+                    sAnalyzer.get_spectrum(c->nAnInChannel, &mesh->pvData[1][1], vIndexes, meta::crossover_metadata::MESH_POINTS);
 
                     // Mark mesh containing data
-                    mesh->data(2, meta::crossover_metadata::MESH_POINTS);
+                    mesh->data(2, meta::crossover_metadata::MESH_POINTS + 2);
                 }
 
                 // Output spectrum analysis for output channel
