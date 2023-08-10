@@ -60,6 +60,13 @@ namespace lsp
             { NULL, NULL }
         };
 
+        static const port_item_t crossover_op_modes[] =
+        {
+            { "Classic",            "crossover.opmode.classic"      },
+            { "Linear Phase",       "crossover.opmode.linear_phase" },
+            { NULL, NULL }
+        };
+
         static const port_item_t crossover_slopes[] =
         {
             { "Off",                "crossover.slope.off"           },
@@ -72,6 +79,7 @@ namespace lsp
 
         #define XOVER_COMMON \
                 BYPASS, \
+                COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
                 AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
                 AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
                 LOG_CONTROL("react", "FFT reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
