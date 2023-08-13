@@ -4,6 +4,7 @@
 
 === 1.0.13 ===
 * Implemented Linear Phase mode for the crossover.
+* Updated build scripts and dependencies.
 
 === 1.0.12 ===
 * Updated build scripts and dependencies.
