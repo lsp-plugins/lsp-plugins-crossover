@@ -159,20 +159,20 @@ namespace lsp
 
             public:
                 explicit crossover(const meta::plugin_t *metadata, size_t mode);
-                virtual ~crossover();
+                virtual ~crossover() override;
 
-                virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports);
-                virtual void        destroy();
+                virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports) override;
+                virtual void        destroy() override;
 
             public:
-                virtual void        update_settings();
-                virtual void        update_sample_rate(long sr);
-                virtual void        ui_activated();
+                virtual void        update_settings() override;
+                virtual void        update_sample_rate(long sr) override;
+                virtual void        ui_activated() override;
 
-                virtual void        process(size_t samples);
-                virtual bool        inline_display(plug::ICanvas *cv, size_t width, size_t height);
+                virtual void        process(size_t samples) override;
+                virtual bool        inline_display(plug::ICanvas *cv, size_t width, size_t height) override;
 
-                virtual void        dump(dspu::IStateDumper *v) const;
+                virtual void        dump(dspu::IStateDumper *v) const override;
         };
     } /* namespace plugins */
 } /* namespace lsp */
