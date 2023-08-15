@@ -718,6 +718,7 @@ namespace lsp
             // Determine number of channels
             size_t channels     = (nMode == XOVER_MONO) ? 1 : 2;
             size_t max_delay    = dspu::millis_to_samples(sr, meta::crossover_metadata::DELAY_MAX);
+            size_t fft_rank     = select_fft_rank(sr);
 
             for (size_t i=0; i<channels; ++i)
             {
@@ -727,7 +728,6 @@ namespace lsp
                 c->sXOver.set_sample_rate(sr);
 
                 // Need to re-initialize FFT crossover?
-                size_t fft_rank     = select_fft_rank(sr);
                 if (fft_rank != c->sFFTXOver.rank())
                 {
                     c->sFFTXOver.init(fft_rank, meta::crossover_metadata::BANDS_MAX);
