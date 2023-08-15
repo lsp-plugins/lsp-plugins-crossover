@@ -766,7 +766,7 @@ namespace lsp
                 channel_t *c    = &vChannels[i];
                 c->bSyncCurve   = true;
 
-                for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX-1; ++i)
+                for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
                 {
                     xover_band_t *xb    = &c->vBands[i];
                     xb->bSyncCurve      = true;
