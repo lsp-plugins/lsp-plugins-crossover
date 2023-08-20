@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2021 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2021 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       12
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       13
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -60,6 +60,13 @@ namespace lsp
             { NULL, NULL }
         };
 
+        static const port_item_t crossover_op_modes[] =
+        {
+            { "Classic",            "crossover.opmode.classic"      },
+            { "Linear Phase",       "crossover.opmode.linear_phase" },
+            { NULL, NULL }
+        };
+
         static const port_item_t crossover_slopes[] =
         {
             { "Off",                "crossover.slope.off"           },
@@ -72,6 +79,7 @@ namespace lsp
 
         #define XOVER_COMMON \
                 BYPASS, \
+                COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
                 AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
                 AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
                 LOG_CONTROL("react", "FFT reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
@@ -86,8 +94,8 @@ namespace lsp
         #define XOVER_FFT_METERS(id, label) \
                 SWITCH("ife" id, "Input FFT graph enable" label, 1.0f), \
                 SWITCH("ofe" id, "Output FFT graph enable" label, 1.0f), \
-                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS), \
-                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS)
+                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
+                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
 
         #define XOVER_CHANNEL_METERS(id, label) \
                 METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
@@ -541,5 +549,5 @@ namespace lsp
             xover_ms_port_groups,
             &crossover_bundle
         };
-    } // namespace meta
-} // namespace lsp
+    } /* namespace meta */
+} /* namespace lsp */

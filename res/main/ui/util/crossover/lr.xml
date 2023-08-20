@@ -79,8 +79,8 @@
 						<mesh id="bfc_${i}l" width="2" fill="true" smooth="true" color="graph_mesh_cycle" color.hue=":hue_${i}l" fcolor="graph_mesh_cycle" fcolor.hue=":hue_${i}l" fcolor.a="0.9" visibility=":flt_l and (:frs_${i}l igt 0)"/>
 						<mesh id="bfc_${i}r" width="2" fill="true" smooth="true" color="graph_mesh_cycle" color.hue=":hue_${i}r" fcolor="graph_mesh_cycle" fcolor.hue=":hue_${i}r" fcolor.a="0.9" visibility=":flt_r and (:frs_${i}r igt 0)"/>
 					</ui:for>
-					<mesh id="ifg_l" width="3" color="left_in" visibility=":ife_l"/>
-					<mesh id="ifg_r" width="3" color="right_in" visibility=":ife_r"/>
+					<mesh id="ifg_l" width="0" color="left_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="left_in" visibility=":ife_l"/>
+					<mesh id="ifg_r" width="0" color="right_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="right_in" visibility=":ife_r"/>
 					<mesh id="ofg_l" width="3" color="left" visibility=":ofe_l"/>
 					<mesh id="ofg_r" width="3" color="right" visibility=":ofe_r"/>
 
@@ -217,21 +217,22 @@
 			</cell>
 
 			<!-- bottom line -->
-			<align halign="1" vreduce="true">
-				<hbox spacing="4" vreduce="true" bg.color="bg_schema" pad.h="6" pad.v="4">
-					<label text="labels.filters" pad.l="6"/>
-					<hbox spacing="4" pad.h="6">
-						<button id="flt_l" text="labels.chan.L_eft" size="22" ui:inject="Button_left"/>
-						<button id="flt_r" text="labels.chan.R_ight" size="22" ui:inject="Button_right"/>
-					</hbox>
-					<label text="labels.curve" pad.l="6"/>
-					<hbox spacing="4" pad.h="6">
-						<button id="crv_l" text="labels.chan.L_eft" size="22" ui:inject="Button_left"/>
-						<button id="crv_r" text="labels.chan.R_ight" size="22" ui:inject="Button_right"/>
-					</hbox>
-
+			<hbox spacing="4" vreduce="true" bg.color="bg_schema" pad.h="6">
+				<label text="labels.mode:" />
+				<combo id="mode" pad.r="8" pad.v="4"/>
+				<void hexpand="true" />
+				<vsep pad.h="2" bg.color="bg" reduce="true" />
+				<label text="labels.filters" pad.l="6"/>
+				<hbox spacing="4" pad.h="6" pad.v="4">
+					<button id="flt_l" text="labels.chan.L_eft" size="22" ui:inject="Button_left"/>
+					<button id="flt_r" text="labels.chan.R_ight" size="22" ui:inject="Button_right"/>
 				</hbox>
-			</align>
+				<label text="labels.curve" pad.l="6"/>
+				<hbox spacing="4" pad.h="6" pad.v="4">
+					<button id="crv_l" text="labels.chan.L_eft" size="22" ui:inject="Button_left"/>
+					<button id="crv_r" text="labels.chan.R_ight" size="22" ui:inject="Button_right"/>
+				</hbox>
+			</hbox>
 		</grid>
 
 		<void height="4" bg.color="bg" vreduce="true"/>

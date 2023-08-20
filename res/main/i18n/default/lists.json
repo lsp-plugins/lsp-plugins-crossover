@@ -1,5 +1,9 @@
 {
 	"crossover": {
+		"opmode": {
+			"classic": "Classic",
+			"linear_phase": "Linear Phase"
+		},
 		"sel": {
 			"left": "Processor Left",
 			"mid": "Processor Middle",

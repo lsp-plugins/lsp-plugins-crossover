@@ -36,6 +36,17 @@
     for all filters. For better audio engineering the plugin addionally provides FFT analysis of input and output signal.
 </p>
 <p>
+	Additional <b>Linear Phase</b> mode allows to split audio signal into multiple frequency bands with linear phase shift.
+	This introduces additional latency but gives several benefits:
+</p>
+<ul>
+	<li>Unlike classic crossovers which use IIR (Infinite Impulse Response) filters to split signal into multiple bands and shift the phase
+	of the audio signal at band split points, the <b>Linear Phase</b> allows to use FIR (Finite Impulse Response) filters which are deprived of this.
+	<li>Unlike most IIR filters which are designed using bilinear transform, linear phase filters allow simulate their tranfer function
+	to look like the transfer function of analog filters, without deforming it's magnitude envelope near the nyquist frequency.</li>
+	<li>Unlike design of classic Linkwitz-Riley filters, the design of IIR filters provides shorter transition zone of the filter.</li>
+</ul>
+<p>
 	Note that <b>Phase</b> and <b>Delay</b> band parameters do not affect the estimated frequency graph which is computed
 	for non-inverted band phase and zero delay value. For another settings, the actual frequency response can be obtained from
 	the FFT analysis of the output signal.

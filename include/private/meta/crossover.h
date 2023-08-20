@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2021 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2021 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -69,6 +69,8 @@ namespace lsp
             static constexpr size_t         FILTER_MESH_POINTS  = MESH_POINTS + 2;
             static constexpr size_t         FFT_WINDOW          = dspu::windows::HANN;
             static constexpr size_t         REFRESH_RATE        = 20;
+            static constexpr size_t         FFT_XOVER_RANK_MIN  = 12;
+            static constexpr size_t         FFT_XOVER_FREQ_MIN  = 44100;
 
             // Output frequency
             static constexpr float          OUT_FREQ_MIN        = 0.0f;
@@ -81,14 +83,20 @@ namespace lsp
             static constexpr float          ZOOM_MAX            = GAIN_AMP_0_DB;
             static constexpr float          ZOOM_DFL            = GAIN_AMP_0_DB;
             static constexpr float          ZOOM_STEP           = 0.0125f;
+
+            enum mode_t
+            {
+                CROSS_CLASSIC,
+                CROSS_LINEAR_PHASE
+            };
         };
 
         extern const meta::plugin_t crossover_mono;
         extern const meta::plugin_t crossover_stereo;
         extern const meta::plugin_t crossover_lr;
         extern const meta::plugin_t crossover_ms;
-    } // namespace meta
-} // namespace lsp
+    } /* namespace meta */
+} /* namespace lsp */
 
 
 #endif /* PRIVATE_META_CROSSOVER_H_ */

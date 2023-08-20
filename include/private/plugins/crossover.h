@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2021 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2021 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -28,6 +28,7 @@
 #include <lsp-plug.in/dsp-units/util/Analyzer.h>
 #include <lsp-plug.in/dsp-units/util/Crossover.h>
 #include <lsp-plug.in/dsp-units/util/Delay.h>
+#include <lsp-plug.in/dsp-units/util/FFTCrossover.h>
 
 #include <private/meta/crossover.h>
 
@@ -61,10 +62,10 @@ namespace lsp
 
                     bool                bSolo;              // Soloing
                     bool                bMute;              // Muting
+                    bool                bActive;            // Band activity flag
                     float               fGain;              // Gain
                     float               fOutLevel;          // Output signal level
                     bool                bSyncCurve;         // Sync frequency response
-                    float               fHue;               // Hue color
 
                     plug::IPort        *pSolo;              // Soloing
                     plug::IPort        *pMute;              // Muting
@@ -75,11 +76,14 @@ namespace lsp
                     plug::IPort        *pFreqEnd;           // Frequency range end
                     plug::IPort        *pOut;               // Output port
                     plug::IPort        *pAmpGraph;          // Amplitude graph
-                    plug::IPort        *pHue;               // Hue color
                 } xover_band_t;
 
                 typedef struct xover_split_t
                 {
+                    size_t              nBand;              // Associated band index
+                    size_t              nSlope;             // Slope
+                    float               fFreq;              // Split frequency
+
                     plug::IPort        *pSlope;             // Slope
                     plug::IPort        *pFreq;              // Split frequency
                 } xover_split_t;
@@ -88,6 +92,7 @@ namespace lsp
                 {
                     dspu::Bypass        sBypass;            // Bypass
                     dspu::Crossover     sXOver;             // Crossover module
+                    dspu::FFTCrossover  sFFTXOver;          // Linear-phase crossover module
 
                     xover_split_t       vSplit[meta::crossover_metadata::BANDS_MAX-1];   // Split bands
                     xover_band_t        vBands[meta::crossover_metadata::BANDS_MAX];     // Crossover bands
@@ -121,6 +126,7 @@ namespace lsp
             protected:
                 dspu::Analyzer      sAnalyzer;              // Analyzer
                 size_t              nMode;                  // Crossover mode
+                size_t              nOpMode;                // Operating mode
                 channel_t          *vChannels;              // Crossover channels
                 float              *vAnalyze[4];            // Data analysis buffer
                 float               fInGain;                // Input gain
@@ -135,6 +141,7 @@ namespace lsp
                 core::IDBuffer     *pIDisplay;              // Inline display buffer
 
                 plug::IPort        *pBypass;                // Bypass port
+                plug::IPort        *pOpMode;                // Operating mode
                 plug::IPort        *pInGain;                // Input gain port
                 plug::IPort        *pOutGain;               // Output gain port
                 plug::IPort        *pReactivity;            // Reactivity
@@ -146,25 +153,28 @@ namespace lsp
                 static void                             process_band(void *object, void *subject, size_t band, const float *data, size_t sample, size_t count);
                 static inline dspu::crossover_mode_t    crossover_mode(size_t slope);
                 static inline size_t                    crossover_slope(size_t slope);
+                static inline float                     fft_crossover_slope(size_t slope);
+                static inline size_t                    select_fft_rank(size_t sample_rate);
+                static int                              compare_splits(const void *a1, const void *a2, void *data);
 
             public:
                 explicit crossover(const meta::plugin_t *metadata, size_t mode);
-                virtual ~crossover();
+                virtual ~crossover() override;
 
-                virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports);
-                virtual void        destroy();
+                virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports) override;
+                virtual void        destroy() override;
 
             public:
-                virtual void        update_settings();
-                virtual void        update_sample_rate(long sr);
-                virtual void        ui_activated();
+                virtual void        update_settings() override;
+                virtual void        update_sample_rate(long sr) override;
+                virtual void        ui_activated() override;
 
-                virtual void        process(size_t samples);
-                virtual bool        inline_display(plug::ICanvas *cv, size_t width, size_t height);
+                virtual void        process(size_t samples) override;
+                virtual bool        inline_display(plug::ICanvas *cv, size_t width, size_t height) override;
 
-                virtual void        dump(dspu::IStateDumper *v) const;
+                virtual void        dump(dspu::IStateDumper *v) const override;
         };
-    } // namespace plugins
-} // namespace lsp
+    } /* namespace plugins */
+} /* namespace lsp */
 
 #endif /* PRIVATE_PLUGINS_CROSSOVER_H_ */

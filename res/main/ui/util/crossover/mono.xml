@@ -72,7 +72,7 @@
 					<ui:for id="i" first="1" last="7">
 						<mesh id="bfc_${i}" width="2" fill="true" smooth="true" color="graph_mesh_cycle" color.hue=":hue_${i}" fcolor="graph_mesh_cycle" fcolor.hue=":hue_${i}" fcolor.a="0.9" visibility=":flt and (:frs_${i} igt 0)"/>
 					</ui:for>
-					<mesh id="ifg" width="3" color="mono_in" visibility=":ife"/>
+					<mesh id="ifg" width="0" color="mono_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="mono_in" visibility=":ife"/>
 					<mesh id="ofg" width="3" color="mono" visibility=":ofe"/>
 
 					<mesh id="ag" width="3" color="bright_cyan" smooth="true" visibility=":crv"/>
@@ -182,12 +182,14 @@
 			</cell>
 
 			<!-- bottom line -->
-			<align halign="1" vreduce="true">
-				<hbox spacing="8" vreduce="true" bg.color="bg_schema" pad.h="6" pad.v="4">
-					<button id="flt" text="labels.filters" size="22" ui:inject="Button_yellow"/>
-					<button id="crv" text="labels.curve" size="22" ui:inject="Button_cyan"/>
-				</hbox>
-			</align>
+			<hbox spacing="8" vreduce="true" bg.color="bg_schema" pad.h="6">
+				<label text="labels.mode:" />
+				<combo id="mode" pad.r="8" pad.v="4"/>
+				<void hexpand="true" />
+				<vsep pad.h="2" bg.color="bg" reduce="true" />
+				<button id="flt" text="labels.filters" size="22" pad.v="4" ui:inject="Button_yellow"/>
+				<button id="crv" text="labels.curve" size="22" pad.v="4" ui:inject="Button_cyan"/>
+			</hbox>
 		</grid>
 
 		<void height="4" bg.color="bg" vreduce="true"/>
