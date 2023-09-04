@@ -157,6 +157,9 @@ namespace lsp
                 static inline size_t                    select_fft_rank(size_t sample_rate);
                 static int                              compare_splits(const void *a1, const void *a2, void *data);
 
+            protected:
+                void                do_destroy();
+
             public:
                 explicit crossover(const meta::plugin_t *metadata, size_t mode);
                 virtual ~crossover() override;

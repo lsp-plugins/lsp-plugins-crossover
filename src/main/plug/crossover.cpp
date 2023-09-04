@@ -110,7 +110,7 @@ namespace lsp
 
         crossover::~crossover()
         {
-            destroy();
+            do_destroy();
         }
 
         void crossover::init(plug::IWrapper *wrapper, plug::IPort **ports)
@@ -404,6 +404,12 @@ namespace lsp
 
         void crossover::destroy()
         {
+            Module::destroy();
+            do_destroy();
+        }
+
+        void crossover::do_destroy()
+        {
             // Determine number of channels
             size_t channels     = (nMode == XOVER_MONO) ? 1 : 2;
 
@@ -441,9 +447,6 @@ namespace lsp
 
             // Destroy analyzer
             sAnalyzer.destroy();
-
-            // Destroy plugin
-            plug::Module::destroy();
         }
 
         inline dspu::crossover_mode_t crossover::crossover_mode(size_t slope)
