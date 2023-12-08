@@ -61,9 +61,9 @@
 						<marker id="fre_0l" color.hue=":hue_0l" hcolor.hue=":hue_0l" lborder="16" lcolor.hue=":hue_0l" hlborder="16" hlcolor.hue=":hue_0l"/>
 						<marker id="fre_0r" color.hue=":hue_0r" hcolor.hue=":hue_0r" lborder="16" lcolor.hue=":hue_0r" hlborder="16" hlcolor.hue=":hue_0r"/>
 						<ui:for id="i" first="1" last="7">
-							<marker id="sf_${i}l" visibility=":frs_${i}l igt 0" editable="true" color.hue=":hue_${i}l" hcolor.hue=":hue_${i}l" rborder="16" rcolor.hue=":hue_${i}l" hrborder="16" hrcolor.hue=":hue_${i}l" pointer="hsize"/>
+							<marker id="sf_${i}l" ui:id="split_marker_${i}l" visibility=":frs_${i}l igt 0" editable="true" color.hue=":hue_${i}l" hcolor.hue=":hue_${i}l" rborder="16" rcolor.hue=":hue_${i}l" hrborder="16" hrcolor.hue=":hue_${i}l" pointer="hsize"/>
 
-							<marker id="sf_${i}r" visibility=":frs_${i}r igt 0" editable="true" color.hue=":hue_${i}r" hcolor.hue=":hue_${i}r" rborder="16" rcolor.hue=":hue_${i}r" hrborder="16" hrcolor.hue=":hue_${i}r" pointer="hsize"/>
+							<marker id="sf_${i}r" ui:id="split_marker_${i}r" visibility=":frs_${i}r igt 0" editable="true" color.hue=":hue_${i}r" hcolor.hue=":hue_${i}r" rborder="16" rcolor.hue=":hue_${i}r" hrborder="16" hrcolor.hue=":hue_${i}r" pointer="hsize"/>
 
 							<marker id="fre_${i}l" visibility=":frs_${i}l igt 0" color.hue=":hue_${i}l" hcolor.hue=":hue_${i}l" lborder="16" lcolor.hue=":hue_${i}l" hlborder="16" hlcolor.hue=":hue_${i}l"/>
 
@@ -127,6 +127,13 @@
 							<text y="${g} db" text="${g}" visibility=":zoom le -15 db"/>
 						</ui:for>
 					</ui:with>
+
+					<ui:for id="i" first="1" count="7">
+						<ui:with ox="0" oy="2" y="1" valign="-1" color="graph_marker_cycle" visibility="false" pad.h="4" font.bold="true">
+							<text ui:id="split_note_${i}l" x=":sf_${i}l" halign="(:sf_${i}l lt 500) ? 1 : -1" text.halign="(:sf_${i}l lt 500) ? -1 : 1" color.hue=":hue_${i}l"/>
+							<text ui:id="split_note_${i}r" x=":sf_${i}r" halign="(:sf_${i}r lt 500) ? 1 : -1" text.halign="(:sf_${i}s lt 500)r ? -1 : 1" color.hue=":hue_${i}r"/>
+						</ui:with>
+					</ui:for>
 				</graph>
 			</group>
 			<!-- zoom -->

@@ -4,6 +4,7 @@
 
 === 1.0.17 ===
 * Implemented automatic scale of spectrum graph switch.
+* Implemented split frequency display.
 
 === 1.0.16 ===
 * Updated build scripts and dependencies.

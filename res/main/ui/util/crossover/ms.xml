@@ -61,9 +61,9 @@
 						<marker id="fre_0m" color.hue=":hue_0m" hcolor.hue=":hue_0m" lborder="16" lcolor.hue=":hue_0m" hlborder="16" hlcolor.hue=":hue_0m"/>
 						<marker id="fre_0s" color.hue=":hue_0s" hcolor.hue=":hue_0s" lborder="16" lcolor.hue=":hue_0s" hlborder="16" hlcolor.hue=":hue_0s"/>
 						<ui:for id="i" first="1" last="7">
-							<marker id="sf_${i}m" visibility=":frs_${i}m igt 0" editable="true" color.hue=":hue_${i}m" hcolor.hue=":hue_${i}m" rborder="16" rcolor.hue=":hue_${i}m" hrborder="16" hrcolor.hue=":hue_${i}m" pointer="hsize"/>
+							<marker id="sf_${i}m" ui:id="split_marker_${i}m" visibility=":frs_${i}m igt 0" editable="true" color.hue=":hue_${i}m" hcolor.hue=":hue_${i}m" rborder="16" rcolor.hue=":hue_${i}m" hrborder="16" hrcolor.hue=":hue_${i}m" pointer="hsize"/>
 
-							<marker id="sf_${i}s" visibility=":frs_${i}s igt 0" editable="true" color.hue=":hue_${i}s" hcolor.hue=":hue_${i}s" rborder="16" rcolor.hue=":hue_${i}s" hrborder="16" hrcolor.hue=":hue_${i}s" pointer="hsize"/>
+							<marker id="sf_${i}s" ui:id="split_marker_${i}s" visibility=":frs_${i}s igt 0" editable="true" color.hue=":hue_${i}s" hcolor.hue=":hue_${i}s" rborder="16" rcolor.hue=":hue_${i}s" hrborder="16" hrcolor.hue=":hue_${i}s" pointer="hsize"/>
 
 							<marker id="fre_${i}m" visibility=":frs_${i}m igt 0" color.hue=":hue_${i}m" hcolor.hue=":hue_${i}m" lborder="16" lcolor.hue=":hue_${i}m" hlborder="16" hlcolor.hue=":hue_${i}m"/>
 
@@ -127,6 +127,13 @@
 							<text y="${g} db" text="${g}" visibility=":zoom le -15 db"/>
 						</ui:for>
 					</ui:with>
+
+					<ui:for id="i" first="1" count="7">
+						<ui:with ox="0" oy="2" y="1" valign="-1" color="graph_marker_cycle" visibility="false" pad.h="4" font.bold="true">
+							<text ui:id="split_note_${i}m" x=":sf_${i}m" halign="(:sf_${i}m lt 500) ? 1 : -1" text.halign="(:sf_${i}m lt 500) ? -1 : 1" color.hue=":hue_${i}m"/>
+							<text ui:id="split_note_${i}s" x=":sf_${i}s" halign="(:sf_${i}s lt 500) ? 1 : -1" text.halign="(:sf_${i}s lt 500)s ? -1 : 1" color.hue=":hue_${i}s"/>
+						</ui:with>
+					</ui:for>
 				</graph>
 			</group>
 			<!-- zoom -->
@@ -219,10 +226,10 @@
 
 			<!-- bottom line -->
 			<hbox spacing="4" vreduce="true" bg.color="bg_schema" pad.h="6">
-				<label text="labels.mode:" />
+				<label text="labels.mode:"/>
 				<combo id="mode" pad.r="8" pad.v="4"/>
-				<void hexpand="true" />
-				<vsep pad.h="2" bg.color="bg" reduce="true" />
+				<void hexpand="true"/>
+				<vsep pad.h="2" bg.color="bg" reduce="true"/>
 				<label text="labels.filters" pad.l="6"/>
 				<hbox spacing="4" pad.h="6" pad.v="4">
 					<button id="flt_m" text="labels.chan.M_id" size="22" ui:inject="Button_mid"/>
@@ -327,18 +334,8 @@
 
 						<!-- c5 -->
 						<cell rows="4" hreduce="true">
-							<ledmeter angle="1"
-								bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken"
-								bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : 0.75">
-								<ledchannel
-									id="blm_${ichp}"
-									min="-72 db"
-									max="12 db"
-									log="true"
-									type="rms_peak"
-									peak.visibility="true"
-									value.color="${chc}"
-								/>
+							<ledmeter angle="1" bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken" bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : 0.75">
+								<ledchannel id="blm_${ichp}" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="${chc}"/>
 							</ledmeter>
 						</cell>
 					</ui:for>
