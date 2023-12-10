@@ -29,7 +29,7 @@ namespace lsp
     namespace plugui
     {
         /**
-         * UI for Multiband Clipper plugin series
+         * UI for Crossover plugin series
          */
         class crossover_ui: public ui::Module, public ui::IPortListener
         {
