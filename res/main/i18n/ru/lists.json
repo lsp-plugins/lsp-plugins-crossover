@@ -16,6 +16,19 @@
 			"72dbo": "LR12 (72 дБ/окт)",
 			"96dbo": "LR16 (96 дБ/окт)",
 			"off": "Выкл"
+		},
+		"splits": {
+			"index": {
+				"split_id": "Раздел №{@id}",
+				"left_id": "Левый №{@id}",
+				"mid_id": "Середина №{@id}",
+				"right_id": "Правый №{@id}",
+				"side_id": "Сторона №{@id}"
+			}
+		},
+		"notes": {
+			"full": "{@id}\n{@frequency} Гц\n{@note}{@octave}{@cents}",
+			"unknown": "{@id}\n{@frequency} Гц"
 		}
 	}
 }

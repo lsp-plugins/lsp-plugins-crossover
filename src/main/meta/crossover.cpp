@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       16
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       17
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -458,6 +458,7 @@ namespace lsp
         {
             "Frequenzweiche Mono x8",
             "Crossover Mono x8",
+            "Crossover Mono x8",
             "FW8M",
             &developers::v_sadovnikov,
             "crossover_mono",
@@ -481,6 +482,7 @@ namespace lsp
         const meta::plugin_t  crossover_stereo =
         {
             "Frequenzweiche Stereo x8",
+            "Crossover Stereo x8",
             "Crossover Stereo x8",
             "FW8S",
             &developers::v_sadovnikov,
@@ -506,6 +508,7 @@ namespace lsp
         {
             "Frequenzweiche LeftRight x8",
             "Crossover LeftRight x8",
+            "Crossover LeftRight x8",
             "FW8LR",
             &developers::v_sadovnikov,
             "crossover_lr",
@@ -529,6 +532,7 @@ namespace lsp
         const meta::plugin_t  crossover_ms =
         {
             "Frequenzweiche MidSide x8",
+            "Crossover MidSide x8",
             "Crossover MidSide x8",
             "FW8MS",
             &developers::v_sadovnikov,
