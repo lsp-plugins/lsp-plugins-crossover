@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -465,6 +465,8 @@ namespace lsp
             LSP_LV2_URI("crossover_mono"),
             LSP_LV2UI_URI("crossover_mono"),
             "rmnv",
+            LSP_VST3_UID("fw8m    rmnv"),
+            LSP_VST3UI_UID("fw8m    rmnv"),
             LSP_LADSPA_CROSSOVER_BASE + 0,
             LSP_LADSPA_URI("crossover_mono"),
             LSP_CLAP_URI("crossover_mono"),
@@ -490,6 +492,8 @@ namespace lsp
             LSP_LV2_URI("crossover_stereo"),
             LSP_LV2UI_URI("crossover_stereo"),
             "ooqb",
+            LSP_VST3_UID("fw8s    ooqb"),
+            LSP_VST3UI_UID("fw8s    ooqb"),
             LSP_LADSPA_CROSSOVER_BASE + 1,
             LSP_LADSPA_URI("crossover_stereo"),
             LSP_CLAP_URI("crossover_stereo"),
@@ -515,6 +519,8 @@ namespace lsp
             LSP_LV2_URI("crossover_lr"),
             LSP_LV2UI_URI("crossover_lr"),
             "wvbr",
+            LSP_VST3_UID("fw8lr   wvbr"),
+            LSP_VST3UI_UID("fw8lr   wvbr"),
             LSP_LADSPA_CROSSOVER_BASE + 2,
             LSP_LADSPA_URI("crossover_lr"),
             LSP_CLAP_URI("crossover_lr"),
@@ -540,6 +546,8 @@ namespace lsp
             LSP_LV2_URI("crossover_ms"),
             LSP_LV2UI_URI("crossover_ms"),
             "vlqv",
+            LSP_VST3_UID("fw8ms   vlqv"),
+            LSP_VST3UI_UID("fw8ms   vlqv"),
             LSP_LADSPA_CROSSOVER_BASE + 3,
             LSP_LADSPA_URI("crossover_ms"),
             LSP_CLAP_URI("crossover_ms"),
