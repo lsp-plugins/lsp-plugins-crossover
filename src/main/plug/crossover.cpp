@@ -461,7 +461,7 @@ namespace lsp
 
         inline float crossover::fft_crossover_slope(size_t slope)
         {
-            return -24.0f * slope;
+            return (slope == dspu::CROSS_SLOPE_LR2) ? -12.0f : -24.0f * (slope - 1.0f);
         }
 
         int crossover::compare_splits(const void *a1, const void *a2, void *data)

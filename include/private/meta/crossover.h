@@ -34,7 +34,7 @@ namespace lsp
         {
             // Maximum supported number of bands
             static constexpr size_t         BANDS_MAX           = 8;
-            static constexpr size_t         SLOPE_DFL           = 2;
+            static constexpr size_t         SLOPE_DFL           = 3;
 
             // In/out gain
             static constexpr float          IN_GAIN_DFL         = GAIN_AMP_0_DB;
