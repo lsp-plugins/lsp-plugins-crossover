@@ -114,7 +114,7 @@ namespace lsp
                 CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
                 HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
                 METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
-                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::FILTER_MESH_POINTS)
+                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
 
         #define XOVER_BAND_METER_MONO(id, label) \
                 METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)

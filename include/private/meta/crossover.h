@@ -66,7 +66,6 @@ namespace lsp
             static constexpr size_t         FFT_RANK            = 13;
             static constexpr size_t         FFT_ITEMS           = 1 << FFT_RANK;
             static constexpr size_t         MESH_POINTS         = 640;
-            static constexpr size_t         FILTER_MESH_POINTS  = MESH_POINTS + 2;
             static constexpr size_t         FFT_WINDOW          = dspu::windows::HANN;
             static constexpr size_t         REFRESH_RATE        = 20;
             static constexpr size_t         FFT_XOVER_RANK_MIN  = 12;

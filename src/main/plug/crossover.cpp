@@ -971,14 +971,27 @@ namespace lsp
                     mesh        = ((b->bSyncCurve) && (b->pAmpGraph != NULL)) ? b->pAmpGraph->buffer<plug::mesh_t>() : NULL;
                     if ((mesh != NULL) && (mesh->isEmpty()))
                     {
-                        mesh->pvData[0][0] = SPEC_FREQ_MIN*0.5f;
-                        mesh->pvData[0][meta::crossover_metadata::MESH_POINTS+1] = SPEC_FREQ_MAX * 2.0f;
-                        mesh->pvData[1][0] = 0.0f;
-                        mesh->pvData[1][meta::crossover_metadata::MESH_POINTS+1] = 0.0f;
+                        float *x = mesh->pvData[0];
+                        float *y = mesh->pvData[1];
 
-                        dsp::copy(&mesh->pvData[0][1], vFreqs, meta::crossover_metadata::MESH_POINTS);
-                        dsp::copy(&mesh->pvData[1][1], b->vFc, meta::crossover_metadata::MESH_POINTS);
-                        mesh->data(2, meta::crossover_metadata::FILTER_MESH_POINTS);
+                        // Fill mesh
+                        dsp::copy(&x[2], vFreqs, meta::crossover_metadata::MESH_POINTS);
+                        dsp::copy(&y[2], b->vFc, meta::crossover_metadata::MESH_POINTS);
+
+                        // Add extra points
+                        x[0]    = SPEC_FREQ_MIN*0.5f;
+                        x[1]    = x[0];
+                        y[0]    = 0.0f;
+                        y[1]    = y[2];
+                        x      += meta::crossover_metadata::MESH_POINTS + 2;
+                        y      += meta::crossover_metadata::MESH_POINTS + 2;
+                        x[0]    = SPEC_FREQ_MAX*2.0f;
+                        x[1]    = x[0];
+                        y[0]    = y[-1];
+                        y[1]    = 0.0f;
+
+                        // Mark mesh as synchronized
+                        mesh->data(2, meta::crossover_metadata::MESH_POINTS + 4);
 
                         b->bSyncCurve       = false;
                     }
