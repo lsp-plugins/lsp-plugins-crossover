@@ -125,14 +125,15 @@ namespace lsp
 
             protected:
                 dspu::Analyzer      sAnalyzer;              // Analyzer
-                size_t              nMode;                  // Crossover mode
-                size_t              nOpMode;                // Operating mode
+                uint32_t            nMode;                  // Crossover mode
+                uint32_t            nOpMode;                // Operating mode
                 channel_t          *vChannels;              // Crossover channels
                 float              *vAnalyze[4];            // Data analysis buffer
                 float               fInGain;                // Input gain
                 float               fOutGain;               // Output gain
                 float               fZoom;                  // Zoom
                 bool                bMSOut;                 // Mid/Side output
+                bool                bSMApply;               // Apply solo/mute to bands
 
                 uint8_t            *pData;                  // Aligned data pointer
                 float              *vFreqs;                 // Analyzer FFT frequencies
@@ -142,6 +143,7 @@ namespace lsp
 
                 plug::IPort        *pBypass;                // Bypass port
                 plug::IPort        *pOpMode;                // Operating mode
+                plug::IPort        *pSMApply;               // Apply solo/mute to bands
                 plug::IPort        *pInGain;                // Input gain port
                 plug::IPort        *pOutGain;               // Output gain port
                 plug::IPort        *pReactivity;            // Reactivity
@@ -162,7 +164,12 @@ namespace lsp
 
             public:
                 explicit crossover(const meta::plugin_t *metadata, size_t mode);
+                crossover(const crossover &) = delete;
+                crossover(crossover &&) = delete;
                 virtual ~crossover() override;
+
+                crossover & operator = (const crossover &) = delete;
+                crossover & operator = (crossover &&) = delete;
 
                 virtual void        init(plug::IWrapper *wrapper, plug::IPort **ports) override;
                 virtual void        destroy() override;

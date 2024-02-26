@@ -81,6 +81,7 @@ namespace lsp
         #define XOVER_COMMON \
                 BYPASS, \
                 COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
+                SWITCH("smapply", "Solo/Mute apply to bands", 1), \
                 AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
                 AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
                 LOG_CONTROL("react", "FFT reactivity", U_MSEC, crossover_metadata::REACT_TIME), \

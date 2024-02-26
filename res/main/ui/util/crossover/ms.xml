@@ -229,6 +229,7 @@
 				<label text="labels.mode:"/>
 				<combo id="mode" pad.r="8" pad.v="4"/>
 				<void hexpand="true"/>
+				<button id="smapply" text="labels.chan.sm_apply" size="22" pad.v="4" ui:inject="Button_green"/>
 				<vsep pad.h="2" bg.color="bg" reduce="true"/>
 				<label text="labels.filters" pad.l="6"/>
 				<hbox spacing="4" pad.h="6" pad.v="4">
