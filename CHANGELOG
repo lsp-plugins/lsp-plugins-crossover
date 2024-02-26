@@ -4,6 +4,7 @@
 
 === 1.0.18 ===
 * Added support of LR2 (12 dB/oct) filters by the Crossover.
+* Updated behaviour of splits in the UI.
 * Updated build scripts and dependencies.
 
 === 1.0.17 ===
