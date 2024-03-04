@@ -156,33 +156,50 @@
 			<!-- signal -->
 			<cell rows="2">
 				<vbox spacing="4">
-					<group text="groups.signal" expand="true" ipadding="0">
-						<vbox>
-							<label text="labels.input" pad.h="6" pad.t="4"/>
-							<knob id="g_in" pad.h="6" pad.v="4"/>
-							<value id="g_in" sline="true" pad.b="4"/>
-							<hsep pad.v="2" vreduce="true" bg.color="bg"/>
-							<label text="labels.output" pad.h="6" pad.t="4"/>
-							<knob id="g_out" pad.h="6" pad.v="4"/>
-							<value id="g_out" width.min="50" sline="true" pad.b="4"/>
-						</vbox>
+					<group text="groups.signal" expand="true">
+						<grid rows="2" cols="2" hspacing="4">
+							<knob id="g_in" pad.r="4"/>
+							<vbox vfill="false">
+								<label text="labels.input" halign="0"/>
+								<value id="g_in" sline="true" halign="0"/>
+							</vbox>
+
+							<knob id="g_out" pad.r="4"/>
+							<vbox vfill="false">
+								<label text="labels.output" expand="true" halign="0"/>
+								<value id="g_out" width.min="50" sline="true" halign="0"/>
+							</vbox>
+						</grid>
 					</group>
 
 					<!-- Analysis -->
 					<group text="groups.analysis" expand="true" ipadding="0">
 						<vbox>
-							<button id="ife" text="labels.fft.fft_in" height="19" ui:inject="Button_cyan_8" hfill="true" pad.t="4" pad.h="6"/>
-							<button id="ofe" text="labels.fft.fft_out" height="19" ui:inject="Button_cyan_8" hfill="true" pad.v="4" pad.h="6"/>
-							<hsep pad.v="2" bg.color="bg" vreduce="true"/>
-							<vbox expand="true">
-								<label text="labels.metering.reactivity" pad.h="6" pad.t="4"/>
-								<knob id="react" size="20" pad.h="6" pad.v="4"/>
-								<value id="react" width.min="50" sline="true" pad.b="4"/>
-								<hsep pad.v="2" vreduce="true" bg.color="bg"/>
-								<label text="labels.metering.shift" pad.h="6" pad.t="4"/>
-								<knob id="shift" size="20" pad.h="6" pad.v="4"/>
-								<value id="shift" width.min="50" sline="true" pad.b="4"/>
-							</vbox>
+							<grid rows="4" cols="2">
+									<label text="labels.fft.fft_in" pad.v="4"/>
+								<button id="ife" pad.v="4" pad.r="6" hfill="true" text="labels.chan.on" height="19" ui:inject="Button_mono_8"/>
+
+								<cell cols="2"><hsep pad.v="2" bg.color="bg" vreduce="true"/></cell>
+
+									<label text="labels.fft.fft_out" pad.v="4"/>
+								<button id="ofe" pad.v="4" pad.r="6" hfill="true" text="labels.chan.on" height="19" ui:inject="Button_mono_8"/>
+
+								<cell cols="2"><hsep pad.v="2" bg.color="bg" vreduce="true"/></cell>
+							</grid>
+
+							<grid rows="2" cols="2" transpose="false" expand="true" hspacing="4">
+								<knob id="react" size="20" pad.r="4" pad.l="6"/>
+								<vbox vfill="false" pad.r="6">
+									<label text="labels.metering.reactivity" halign="0"/>
+									<value id="react" width.min="50" sline="true" halign="0"/>
+								</vbox>
+
+								<knob id="shift" size="20" pad.r="4" pad.l="6"/>
+								<vbox vfill="false" pad.r="6">
+									<label text="labels.metering.shift" halign="0"/>
+									<value id="shift" width.min="50" sline="true" halign="0"/>
+								</vbox>
+							</grid>
 						</vbox>
 					</group>
 				</vbox>
