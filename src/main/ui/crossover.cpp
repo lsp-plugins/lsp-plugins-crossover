@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2021 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2021 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -79,6 +79,18 @@ namespace lsp
             char widget_id[64];
             ::snprintf(widget_id, sizeof(widget_id)/sizeof(char), fmt, base, int(id));
             return pWrapper->controller()->widgets()->get<T>(widget_id);
+        }
+
+        crossover_ui::split_t *crossover_ui::find_split_by_port(ui::IPort *port)
+        {
+            for (lltl::iterator<split_t> it = vSplits.values(); it; ++it)
+            {
+                split_t *d = it.get();
+                if ((d->pFreq == port) ||
+                    (d->pSlope == port))
+                    return d;
+            }
+            return NULL;
         }
 
         crossover_ui::crossover_ui(const meta::plugin_t *meta): ui::Module(meta)
@@ -178,6 +190,7 @@ namespace lsp
                     s.wNote         = find_split_widget<tk::GraphText>(*fmt, "split_note", port_id);
 
                     s.pFreq         = find_port(*fmt, "sf", port_id);
+                    s.pSlope        = find_port(*fmt, "frs", port_id);
 
                     if (s.wMarker != NULL)
                     {
@@ -187,10 +200,36 @@ namespace lsp
 
                     if (s.pFreq != NULL)
                         s.pFreq->bind(this);
+                    if (s.pSlope != NULL)
+                        s.pSlope->bind(this);
 
                     vSplits.add(&s);
                 }
             }
+        }
+
+        ssize_t crossover_ui::compare_splits_by_freq(const split_t *a, const split_t *b)
+        {
+            if (a->fFreq < b->fFreq)
+                return -1;
+            return (a->fFreq > b->fFreq) ? 1 : 0;
+        }
+
+        void crossover_ui::resort_active_splits()
+        {
+            vActiveSplits.clear();
+
+            // Form unsorted list of active splits
+            for (lltl::iterator<split_t> it = vSplits.values(); it; ++it)
+            {
+                split_t *s = it.get();
+                if (!s->bOn)
+                    continue;
+                vActiveSplits.add(s);
+            }
+
+            // Sort active splits
+            vActiveSplits.qsort(compare_splits_by_freq);
         }
 
         void crossover_ui::update_split_note_text(split_t *s)
@@ -282,13 +321,77 @@ namespace lsp
 
         void crossover_ui::notify(ui::IPort *port, size_t flags)
         {
+            bool need_resort_active_splits = false;
+            split_t *freq_initiator = NULL;
+
             for (size_t i=0, n=vSplits.size(); i<n; ++i)
             {
-                split_t *d = vSplits.uget(i);
-                if (d->pFreq == port)
-                    update_split_note_text(d);
+                split_t *s = vSplits.uget(i);
+                if (s->pSlope == port)
+                {
+                    s->bOn          = port->value() >= 0.5f;
+                    need_resort_active_splits = true;
+                }
+                if (s->pFreq == port)
+                {
+                    s->fFreq        = port->value();
+                    update_split_note_text(s);
+
+                    if (flags & ui::PORT_USER_EDIT)
+                        freq_initiator = s;
+                    else if (s->bOn)
+                        need_resort_active_splits = true;
+                }
             }
 
+            // Resort order of active splits if needed
+            if (need_resort_active_splits)
+                resort_active_splits();
+            if (freq_initiator != NULL)
+                toggle_active_split_fequency(freq_initiator);
+        }
+
+        void crossover_ui::toggle_active_split_fequency(split_t *initiator)
+        {
+            lltl::parray<ui::IPort> notify_list;
+            bool left_position  = true;
+            const float freq    = initiator->pFreq->value();
+
+            // Form unsorted list of active splits
+            for (lltl::iterator<split_t> it = vActiveSplits.values(); it; ++it)
+            {
+                split_t *s = it.get();
+                if (!s->bOn)
+                    continue;
+
+                // Main logic
+                if (s == initiator)
+                {
+                    left_position = false;
+                    continue;
+                }
+
+                if (left_position)
+                {
+                    if ((s->pFreq != NULL) && (s->fFreq > freq * 0.999f))
+                    {
+                        s->pFreq->set_value(freq * 0.999f);
+                        notify_list.add(s->pFreq);
+                    }
+                }
+                else
+                {
+                    if ((s->pFreq != NULL) && (s->fFreq < freq * 1.001f))
+                    {
+                        s->pFreq->set_value(freq * 1.001f);
+                        notify_list.add(s->pFreq);
+                    }
+                }
+            }
+
+            // Notify all modified ports
+            for (lltl::iterator<ui::IPort> it = notify_list.values(); it; ++it)
+                it->notify_all(ui::PORT_NONE);
         }
 
 

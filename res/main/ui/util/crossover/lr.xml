@@ -139,7 +139,7 @@
 			<!-- zoom -->
 			<cell rows="2">
 				<vbox vexpand="true" bg.color="bg_schema">
-					<label font.name="lsp-icons" font.size="12" font.antialias="true" text="E" color="text_icon" pad.b="4" pad.t="4"/>
+					<label font.name="lsp-icons" font.size="12" font.antialias="true" text="icons.main.zoom" color="text_icon" pad.b="4" pad.t="4"/>
 					<fader id="zoom" angle="1" vexpand="true" bg.inherit="true" flat="true"/>
 					<value id="zoom" width="40"/>
 				</vbox>
@@ -229,6 +229,7 @@
 				<label text="labels.mode:" />
 				<combo id="mode" pad.r="8" pad.v="4"/>
 				<void hexpand="true" />
+				<button id="smapply" text="labels.chan.sm_apply" size="22" pad.v="4" ui:inject="Button_green"/>
 				<vsep pad.h="2" bg.color="bg" reduce="true" />
 				<label text="labels.filters" pad.l="6"/>
 				<hbox spacing="4" pad.h="6" pad.v="4">

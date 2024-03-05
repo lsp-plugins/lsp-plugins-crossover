@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -26,6 +26,7 @@
 #include <lsp-plug.in/dsp/dsp.h>
 #include <lsp-plug.in/dsp-units/misc/envelope.h>
 #include <lsp-plug.in/dsp-units/units.h>
+#include <lsp-plug.in/shared/debug.h>
 #include <lsp-plug.in/shared/id_colors.h>
 #include <lsp-plug.in/stdlib/math.h>
 
@@ -35,12 +36,6 @@ namespace lsp
 {
     namespace plugins
     {
-        static plug::IPort *TRACE_PORT(plug::IPort *p)
-        {
-            lsp_trace("  port id=%s", (p)->metadata()->id);
-            return p;
-        }
-
         //-------------------------------------------------------------------------
         // Plugin factory
         typedef struct plugin_settings_t
@@ -91,6 +86,7 @@ namespace lsp
             fOutGain        = GAIN_AMP_0_DB;
             fZoom           = GAIN_AMP_0_DB;
             bMSOut          = false;
+            bSMApply        = true;
 
             pData           = NULL;
             vFreqs          = NULL;
@@ -100,6 +96,7 @@ namespace lsp
 
             pBypass         = NULL;
             pOpMode         = NULL;
+            pSMApply        = NULL;
             pInGain         = NULL;
             pOutGain        = NULL;
             pReactivity     = NULL;
@@ -128,12 +125,12 @@ namespace lsp
                                       mesh_size             + // vFreqs
                                       ind_size              + // vIndexes
                                       channels * (
-                                          2 * mesh_size                           +                   // vTr (both complex and real)
-                                          mesh_size                               +                   // vFc (real only)
-                                          BUFFER_SIZE * sizeof(float) * 4         +                   // vInAnalyze, vOutAnalyze, vBuffer, vResult
-                                          BUFFER_SIZE * meta::crossover_metadata::BANDS_MAX +          // band.vResult
-                                          meta::crossover_metadata::BANDS_MAX * mesh_size * 2 +        // band.vTr
-                                          meta::crossover_metadata::BANDS_MAX * mesh_size              // band.vFc
+                                          2 * mesh_size                           +                             // vTr (both complex and real)
+                                          mesh_size                               +                             // vFc (real only)
+                                          BUFFER_SIZE * sizeof(float) * 4         +                             // vInAnalyze, vOutAnalyze, vBuffer, vResult
+                                          BUFFER_SIZE * sizeof(float) * meta::crossover_metadata::BANDS_MAX +   // band.vResult
+                                          meta::crossover_metadata::BANDS_MAX * mesh_size * 2 +                 // band.vTr
+                                          meta::crossover_metadata::BANDS_MAX * mesh_size                       // band.vFc
                                       );
 
             // Initialize analyzer
@@ -155,12 +152,9 @@ namespace lsp
             lsp_guard_assert(uint8_t *save   = ptr);
 
             // Assign pointers
-            vChannels       = reinterpret_cast<channel_t *>(ptr);       // Audio channels
-            ptr            += sz_channels;
-            vFreqs          = reinterpret_cast<float *>(ptr);           // Graph frequencies
-            ptr            += mesh_size;
-            vIndexes        = reinterpret_cast<uint32_t *>(ptr);
-            ptr            += ind_size;
+            vChannels       = advance_ptr_bytes<channel_t>(ptr, sz_channels);       // Audio channels
+            vFreqs          = advance_ptr_bytes<float>(ptr, mesh_size);           // Graph frequencies
+            vIndexes        = advance_ptr_bytes<uint32_t>(ptr, ind_size);
 
             // Initialize channels
             for (size_t i=0; i<channels; ++i)
@@ -184,12 +178,9 @@ namespace lsp
 
                     b->vOut             = NULL;
 
-                    b->vResult          = reinterpret_cast<float *>(ptr);
-                    ptr                += BUFFER_SIZE;
-                    b->vTr              = reinterpret_cast<float *>(ptr);           // Transfer buffer
-                    ptr                += mesh_size * 2;
-                    b->vFc              = reinterpret_cast<float *>(ptr);           // Frequency chart
-                    ptr                += mesh_size;
+                    b->vResult          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                    b->vTr              = advance_ptr_bytes<float>(ptr, mesh_size * 2);           // Transfer buffer
+                    b->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);           // Frequency chart
 
                     b->bSolo            = false;
                     b->bMute            = false;
@@ -222,18 +213,12 @@ namespace lsp
 
                 c->vIn              = NULL;
                 c->vOut             = NULL;
-                c->vInAnalyze       = reinterpret_cast<float *>(ptr);
-                ptr                += BUFFER_SIZE * sizeof(float);
-                c->vOutAnalyze      = reinterpret_cast<float *>(ptr);
-                ptr                += BUFFER_SIZE * sizeof(float);
-                c->vBuffer          = reinterpret_cast<float *>(ptr);
-                ptr                += BUFFER_SIZE * sizeof(float);
-                c->vResult          = reinterpret_cast<float *>(ptr);
-                ptr                += BUFFER_SIZE * sizeof(float);
-                c->vTr              = reinterpret_cast<float *>(ptr);
-                ptr                += mesh_size * 2;
-                c->vFc              = reinterpret_cast<float *>(ptr);
-                ptr                += mesh_size;
+                c->vInAnalyze       = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                c->vOutAnalyze      = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                c->vBuffer          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                c->vResult          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                c->vTr              = advance_ptr_bytes<float>(ptr, mesh_size * 2);
+                c->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);
 
                 c->nAnInChannel     = an_cid++;
                 c->nAnOutChannel    = an_cid++;
@@ -264,44 +249,45 @@ namespace lsp
             // Input ports
             lsp_trace("Binding input ports");
             for (size_t i=0; i<channels; ++i)
-                vChannels[i].pIn        =   TRACE_PORT(ports[port_id++]);
+                BIND_PORT(vChannels[i].pIn);
 
             // Input ports
             lsp_trace("Binding output ports");
             for (size_t i=0; i<channels; ++i)
-                vChannels[i].pOut       =   TRACE_PORT(ports[port_id++]);
+                BIND_PORT(vChannels[i].pOut);
 
             // Bind
             lsp_trace("Binding band outputs");
             if (channels < 2)
             {
                 for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
-                    vChannels[0].vBands[i].pOut     =   TRACE_PORT(ports[port_id++]);
+                    BIND_PORT(vChannels[0].vBands[i].pOut);
             }
             else
             {
                 for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
                 {
-                    vChannels[0].vBands[i].pOut     =   TRACE_PORT(ports[port_id++]);
-                    vChannels[1].vBands[i].pOut     =   TRACE_PORT(ports[port_id++]);
+                    BIND_PORT(vChannels[0].vBands[i].pOut);
+                    BIND_PORT(vChannels[1].vBands[i].pOut);
                 }
             }
 
             // Bind bypass
             lsp_trace("Binding common ports");
-            pBypass         = TRACE_PORT(ports[port_id++]);
-            pOpMode         = TRACE_PORT(ports[port_id++]);
-            pInGain         = TRACE_PORT(ports[port_id++]);
-            pOutGain        = TRACE_PORT(ports[port_id++]);
-            pReactivity     = TRACE_PORT(ports[port_id++]);
-            pShiftGain      = TRACE_PORT(ports[port_id++]);
-            pZoom           = TRACE_PORT(ports[port_id++]);
+            BIND_PORT(pBypass);
+            BIND_PORT(pOpMode);
+            BIND_PORT(pSMApply);
+            BIND_PORT(pInGain);
+            BIND_PORT(pOutGain);
+            BIND_PORT(pReactivity);
+            BIND_PORT(pShiftGain);
+            BIND_PORT(pZoom);
 
             if ((nMode == XOVER_LR) || (nMode == XOVER_MS))
-                TRACE_PORT(ports[port_id++]);
+                SKIP_PORT("Processor selector");
 
             if (nMode == XOVER_MS)
-                pMSOut          = TRACE_PORT(ports[port_id++]);
+                BIND_PORT(pMSOut);
 
             // Bind channel ports
             lsp_trace("Binding channel ports");
@@ -314,9 +300,9 @@ namespace lsp
                     c->pAmpGraph            = NULL;
                 else
                 {
-                    TRACE_PORT(ports[port_id++]); // Skip filter curves switch
-                    TRACE_PORT(ports[port_id++]); // Skip graph curves switch
-                    c->pAmpGraph            = TRACE_PORT(ports[port_id++]);
+                    SKIP_PORT("Filter curves switch"); // Skip filter curves switch
+                    SKIP_PORT("Graph curves switch"); // Skip graph curves switch
+                    BIND_PORT(c->pAmpGraph);
                 }
             }
 
@@ -325,12 +311,12 @@ namespace lsp
             {
                 channel_t *c    = &vChannels[i];
 
-                c->pFftInSw             = TRACE_PORT(ports[port_id++]);
-                c->pFftOutSw            = TRACE_PORT(ports[port_id++]);
-                c->pFftIn               = TRACE_PORT(ports[port_id++]);
-                c->pFftOut              = TRACE_PORT(ports[port_id++]);
-                c->pInLvl               = TRACE_PORT(ports[port_id++]);
-                c->pOutLvl              = TRACE_PORT(ports[port_id++]);
+                BIND_PORT(c->pFftInSw);
+                BIND_PORT(c->pFftOutSw);
+                BIND_PORT(c->pFftIn);
+                BIND_PORT(c->pFftOut);
+                BIND_PORT(c->pInLvl);
+                BIND_PORT(c->pOutLvl);
             }
 
             // Split frequencies
@@ -349,8 +335,8 @@ namespace lsp
                     }
                     else
                     {
-                        s->pSlope           = TRACE_PORT(ports[port_id++]);
-                        s->pFreq            = TRACE_PORT(ports[port_id++]);
+                        BIND_PORT(s->pSlope);
+                        BIND_PORT(s->pFreq);
                     }
                 }
             }
@@ -376,14 +362,14 @@ namespace lsp
                     }
                     else
                     {
-                        b->pSolo            = TRACE_PORT(ports[port_id++]);
-                        b->pMute            = TRACE_PORT(ports[port_id++]);
-                        b->pPhase           = TRACE_PORT(ports[port_id++]);
-                        b->pGain            = TRACE_PORT(ports[port_id++]);
-                        b->pDelay           = TRACE_PORT(ports[port_id++]);
-                        TRACE_PORT(ports[port_id++]); // Skip hue settings
-                        b->pFreqEnd         = TRACE_PORT(ports[port_id++]);
-                        b->pAmpGraph        = TRACE_PORT(ports[port_id++]);
+                        BIND_PORT(b->pSolo);
+                        BIND_PORT(b->pMute);
+                        BIND_PORT(b->pPhase);
+                        BIND_PORT(b->pGain);
+                        BIND_PORT(b->pDelay);
+                        SKIP_PORT("Hue"); // Skip hue settings
+                        BIND_PORT(b->pFreqEnd);
+                        BIND_PORT(b->pAmpGraph);
                     }
                 }
             }
@@ -395,7 +381,7 @@ namespace lsp
                 for (size_t j=0; j<channels; ++j)
                 {
                     xover_band_t *b     = &vChannels[j].vBands[i];
-                    b->pOutLevel        = TRACE_PORT(ports[port_id++]);
+                    BIND_PORT(b->pOutLevel);
                 }
             }
 
@@ -461,7 +447,7 @@ namespace lsp
 
         inline float crossover::fft_crossover_slope(size_t slope)
         {
-            return -24.0f * slope;
+            return (slope == dspu::CROSS_SLOPE_LR2) ? -12.0f : -24.0f * (slope - 1.0f);
         }
 
         int crossover::compare_splits(const void *a1, const void *a2, void *data)
@@ -706,6 +692,7 @@ namespace lsp
             fOutGain        = pOutGain->value();
             fZoom           = pZoom->value();
             bMSOut          = (pMSOut != NULL) ? pMSOut->value() >= 0.5f : false;
+            bSMApply        = pSMApply->value() >= 0.5f;
 
             // Report latency
             set_latency(
@@ -779,6 +766,7 @@ namespace lsp
 
         void crossover::process_band(void *object, void *subject, size_t band, const float *data, size_t sample, size_t count)
         {
+            crossover *self         = static_cast<crossover *>(object);
             channel_t *c            = static_cast<channel_t *>(subject);
             xover_band_t *b         = &c->vBands[band];
 
@@ -786,6 +774,8 @@ namespace lsp
             b->sDelay.process(&b->vResult[sample], data, b->fGain, count);
             if (!b->bMute)
                 dsp::add2(&c->vResult[sample], &b->vResult[sample], count);
+            else if (self->bSMApply)
+                dsp::fill_zero(&b->vResult[sample], count);
         }
 
         void crossover::process(size_t samples)
@@ -971,14 +961,27 @@ namespace lsp
                     mesh        = ((b->bSyncCurve) && (b->pAmpGraph != NULL)) ? b->pAmpGraph->buffer<plug::mesh_t>() : NULL;
                     if ((mesh != NULL) && (mesh->isEmpty()))
                     {
-                        mesh->pvData[0][0] = SPEC_FREQ_MIN*0.5f;
-                        mesh->pvData[0][meta::crossover_metadata::MESH_POINTS+1] = SPEC_FREQ_MAX * 2.0f;
-                        mesh->pvData[1][0] = 0.0f;
-                        mesh->pvData[1][meta::crossover_metadata::MESH_POINTS+1] = 0.0f;
+                        float *x = mesh->pvData[0];
+                        float *y = mesh->pvData[1];
 
-                        dsp::copy(&mesh->pvData[0][1], vFreqs, meta::crossover_metadata::MESH_POINTS);
-                        dsp::copy(&mesh->pvData[1][1], b->vFc, meta::crossover_metadata::MESH_POINTS);
-                        mesh->data(2, meta::crossover_metadata::FILTER_MESH_POINTS);
+                        // Fill mesh
+                        dsp::copy(&x[2], vFreqs, meta::crossover_metadata::MESH_POINTS);
+                        dsp::copy(&y[2], b->vFc, meta::crossover_metadata::MESH_POINTS);
+
+                        // Add extra points
+                        x[0]    = SPEC_FREQ_MIN*0.5f;
+                        x[1]    = x[0];
+                        y[0]    = 0.0f;
+                        y[1]    = y[2];
+                        x      += meta::crossover_metadata::MESH_POINTS + 2;
+                        y      += meta::crossover_metadata::MESH_POINTS + 2;
+                        x[0]    = SPEC_FREQ_MAX*2.0f;
+                        x[1]    = x[0];
+                        y[0]    = y[-1];
+                        y[1]    = 0.0f;
+
+                        // Mark mesh as synchronized
+                        mesh->data(2, meta::crossover_metadata::MESH_POINTS + 4);
 
                         b->bSyncCurve       = false;
                     }
@@ -1267,6 +1270,7 @@ namespace lsp
             v->write("fOutGain", fOutGain);
             v->write("fZoom", fZoom);
             v->write("bMSOut", bMSOut);
+            v->write("bSMApply", bSMApply);
 
             v->write("pData", pData);
             v->write("vFreqs", vFreqs);
@@ -1276,6 +1280,7 @@ namespace lsp
 
             v->write("pBypass", pBypass);
             v->write("pOpMode", pOpMode);
+            v->write("pSMApply", pSMApply);
             v->write("pInGain", pInGain);
             v->write("pOutGain", pOutGain);
             v->write("pReactivity", pReactivity);

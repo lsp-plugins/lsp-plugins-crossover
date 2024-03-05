@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       17
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       18
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -70,6 +70,7 @@ namespace lsp
         static const port_item_t crossover_slopes[] =
         {
             { "Off",                "crossover.slope.off"           },
+            { "LR2 (12 dB/oct)",    "crossover.slope.12dbo"         },
             { "LR4 (24 dB/oct)",    "crossover.slope.24dbo"         },
             { "LR8 (48 dB/oct)",    "crossover.slope.48dbo"         },
             { "LR12 (72 dB/oct)",   "crossover.slope.72dbo"         },
@@ -80,6 +81,7 @@ namespace lsp
         #define XOVER_COMMON \
                 BYPASS, \
                 COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
+                SWITCH("smapply", "Solo/Mute apply to bands", 1), \
                 AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
                 AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
                 LOG_CONTROL("react", "FFT reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
@@ -113,7 +115,7 @@ namespace lsp
                 CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
                 HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
                 METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
-                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::FILTER_MESH_POINTS)
+                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
 
         #define XOVER_BAND_METER_MONO(id, label) \
                 METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)
@@ -465,6 +467,8 @@ namespace lsp
             LSP_LV2_URI("crossover_mono"),
             LSP_LV2UI_URI("crossover_mono"),
             "rmnv",
+            LSP_VST3_UID("fw8m    rmnv"),
+            LSP_VST3UI_UID("fw8m    rmnv"),
             LSP_LADSPA_CROSSOVER_BASE + 0,
             LSP_LADSPA_URI("crossover_mono"),
             LSP_CLAP_URI("crossover_mono"),
@@ -490,6 +494,8 @@ namespace lsp
             LSP_LV2_URI("crossover_stereo"),
             LSP_LV2UI_URI("crossover_stereo"),
             "ooqb",
+            LSP_VST3_UID("fw8s    ooqb"),
+            LSP_VST3UI_UID("fw8s    ooqb"),
             LSP_LADSPA_CROSSOVER_BASE + 1,
             LSP_LADSPA_URI("crossover_stereo"),
             LSP_CLAP_URI("crossover_stereo"),
@@ -515,6 +521,8 @@ namespace lsp
             LSP_LV2_URI("crossover_lr"),
             LSP_LV2UI_URI("crossover_lr"),
             "wvbr",
+            LSP_VST3_UID("fw8lr   wvbr"),
+            LSP_VST3UI_UID("fw8lr   wvbr"),
             LSP_LADSPA_CROSSOVER_BASE + 2,
             LSP_LADSPA_URI("crossover_lr"),
             LSP_CLAP_URI("crossover_lr"),
@@ -540,6 +548,8 @@ namespace lsp
             LSP_LV2_URI("crossover_ms"),
             LSP_LV2UI_URI("crossover_ms"),
             "vlqv",
+            LSP_VST3_UID("fw8ms   vlqv"),
+            LSP_VST3UI_UID("fw8ms   vlqv"),
             LSP_LADSPA_CROSSOVER_BASE + 3,
             LSP_LADSPA_URI("crossover_ms"),
             LSP_CLAP_URI("crossover_ms"),
