@@ -2,6 +2,9 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.19 ===
+
+
 === 1.0.18 ===
 * Added support of LR2 (12 dB/oct) filters by the Crossover.
 * Added S/M Apply switch that applies effect of Solo/Mute buttons to corresponding
