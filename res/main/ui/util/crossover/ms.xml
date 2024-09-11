@@ -277,7 +277,7 @@
 
 						<!-- Band number -->
 						<cell cols="4">
-							<label text="${chl}" text:id="${i}" color="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? '${chc}' : '${chc}_inactive'" bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken"/>
+							<label text="${chl}" text:id="${:i+1}" color="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? '${chc}' : '${chc}_inactive'" bg.bright="((${i} ieq 0) or (:frs_${ichp} igt 0)) ? 1.0 : :const_bg_darken"/>
 						</cell>
 
 						<!-- Slope selector -->

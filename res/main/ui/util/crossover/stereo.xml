@@ -252,7 +252,7 @@
 
 					<!-- Band number -->
 					<cell cols="4">
-						<label text="${i}" bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : 0.75" bg.bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : :const_bg_darken"/>
+						<label text="${:i+1}" bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : 0.75" bg.bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : :const_bg_darken"/>
 					</cell>
 
 					<!-- Slope selector -->
