@@ -38,39 +38,42 @@ namespace lsp
     {
         //-------------------------------------------------------------------------
         // Plugin factory
-        typedef struct plugin_settings_t
+        inline namespace
         {
-            const meta::plugin_t   *metadata;
-            uint8_t                 mode;
-        } plugin_settings_t;
+            typedef struct plugin_settings_t
+            {
+                const meta::plugin_t   *metadata;
+                uint8_t                 mode;
+            } plugin_settings_t;
 
-        static const meta::plugin_t *plugins[] =
-        {
-            &meta::crossover_mono,
-            &meta::crossover_stereo,
-            &meta::crossover_lr,
-            &meta::crossover_ms
-        };
+            static const meta::plugin_t *plugins[] =
+            {
+                &meta::crossover_mono,
+                &meta::crossover_stereo,
+                &meta::crossover_lr,
+                &meta::crossover_ms
+            };
 
-        static const plugin_settings_t plugin_settings[] =
-        {
-            { &meta::crossover_mono,        crossover::XOVER_MONO       },
-            { &meta::crossover_stereo,      crossover::XOVER_STEREO     },
-            { &meta::crossover_lr,          crossover::XOVER_LR         },
-            { &meta::crossover_ms,          crossover::XOVER_MS         },
+            static const plugin_settings_t plugin_settings[] =
+            {
+                { &meta::crossover_mono,        crossover::XOVER_MONO       },
+                { &meta::crossover_stereo,      crossover::XOVER_STEREO     },
+                { &meta::crossover_lr,          crossover::XOVER_LR         },
+                { &meta::crossover_ms,          crossover::XOVER_MS         },
 
-            { NULL, 0 }
-        };
+                { NULL, 0 }
+            };
 
-        static plug::Module *plugin_factory(const meta::plugin_t *meta)
-        {
-            for (const plugin_settings_t *s = plugin_settings; s->metadata != NULL; ++s)
-                if (s->metadata == meta)
-                    return new crossover(s->metadata, s->mode);
-            return NULL;
-        }
+            static plug::Module *plugin_factory(const meta::plugin_t *meta)
+            {
+                for (const plugin_settings_t *s = plugin_settings; s->metadata != NULL; ++s)
+                    if (s->metadata == meta)
+                        return new crossover(s->metadata, s->mode);
+                return NULL;
+            }
 
-        static plug::Factory factory(plugin_factory, plugins, 4);
+            static plug::Factory factory(plugin_factory, plugins, 4);
+        } /* inline namespace */
 
         //-------------------------------------------------------------------------
         crossover::crossover(const meta::plugin_t *metadata, size_t mode): plug::Module(metadata)
