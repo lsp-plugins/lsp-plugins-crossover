@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -103,9 +103,9 @@ namespace lsp
                 METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
                 METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
 
-        #define XOVER_SPLIT(id, label, slope, freq) \
+        #define XOVER_SPLIT(id, label, alias, slope, freq) \
                 COMBO("frs" id, "Frequency range slope" label, crossover_metadata::SLOPE_DFL * slope, crossover_slopes), \
-                LOG_CONTROL_DFL("sf" id, "Split frequency" label, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
+                LOG_CONTROL_DFL("sf" id, "Split frequency" label, "Split" alias, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
 
         #define XOVER_BAND(id, label, x, total, fe, fs) \
                 SWITCH("bs" id, "Solo band" label, 0.0f), \
@@ -210,13 +210,13 @@ namespace lsp
             XOVER_FFT_METERS("", ""),
             XOVER_CHANNEL_METERS("", ""),
 
-            XOVER_SPLIT("_1", " 1", 0, 40.0f),
-            XOVER_SPLIT("_2", " 2", 1, 100.0f),
-            XOVER_SPLIT("_3", " 3", 0, 252.0f),
-            XOVER_SPLIT("_4", " 4", 1, 632.0f),
-            XOVER_SPLIT("_5", " 5", 0, 1587.0f),
-            XOVER_SPLIT("_6", " 6", 1, 3984.0f),
-            XOVER_SPLIT("_7", " 7", 0, 10000.0f),
+            XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
+            XOVER_SPLIT("_2", " 2", " 2", 1, 100.0f),
+            XOVER_SPLIT("_3", " 3", " 3", 0, 252.0f),
+            XOVER_SPLIT("_4", " 4", " 4", 1, 632.0f),
+            XOVER_SPLIT("_5", " 5", " 5", 0, 1587.0f),
+            XOVER_SPLIT("_6", " 6", " 6", 1, 3984.0f),
+            XOVER_SPLIT("_7", " 7", " 7", 0, 10000.0f),
 
             XOVER_BAND("_0", " 0", 0, 8, 10.0f, 40.0f),
             XOVER_BAND("_1", " 1", 1, 8, 40.0f, 100.0f),
@@ -266,13 +266,13 @@ namespace lsp
             XOVER_FFT_METERS("_r", " Right"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1", " 1", 0, 40.0f),
-            XOVER_SPLIT("_2", " 2", 1, 100.0f),
-            XOVER_SPLIT("_3", " 3", 0, 252.0f),
-            XOVER_SPLIT("_4", " 4", 1, 632.0f),
-            XOVER_SPLIT("_5", " 5", 0, 1587.0f),
-            XOVER_SPLIT("_6", " 6", 1, 3984.0f),
-            XOVER_SPLIT("_7", " 7", 0, 10000.0f),
+            XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
+            XOVER_SPLIT("_2", " 2", " 2", 1, 100.0f),
+            XOVER_SPLIT("_3", " 3", " 3", 0, 252.0f),
+            XOVER_SPLIT("_4", " 4", " 4", 1, 632.0f),
+            XOVER_SPLIT("_5", " 5", " 5", 0, 1587.0f),
+            XOVER_SPLIT("_6", " 6", " 6", 1, 3984.0f),
+            XOVER_SPLIT("_7", " 7", " 7", 0, 10000.0f),
 
             XOVER_BAND("_0", " 0", 0, 8, 10.0f, 40.0f),
             XOVER_BAND("_1", " 1", 1, 8, 40.0f, 100.0f),
@@ -324,21 +324,21 @@ namespace lsp
             XOVER_FFT_METERS("_r", " Right"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1l", " 1 Left", 0, 40.0f),
-            XOVER_SPLIT("_2l", " 2 Left", 1, 100.0f),
-            XOVER_SPLIT("_3l", " 3 Left", 0, 252.0f),
-            XOVER_SPLIT("_4l", " 4 Left", 1, 632.0f),
-            XOVER_SPLIT("_5l", " 5 Left", 0, 1587.0f),
-            XOVER_SPLIT("_6l", " 6 Left", 1, 3984.0f),
-            XOVER_SPLIT("_7l", " 7 Left", 0, 10000.0f),
+            XOVER_SPLIT("_1l", " 1 Left", " 1 L", 0, 40.0f),
+            XOVER_SPLIT("_2l", " 2 Left", " 2 L", 1, 100.0f),
+            XOVER_SPLIT("_3l", " 3 Left", " 3 L", 0, 252.0f),
+            XOVER_SPLIT("_4l", " 4 Left", " 4 L", 1, 632.0f),
+            XOVER_SPLIT("_5l", " 5 Left", " 5 L", 0, 1587.0f),
+            XOVER_SPLIT("_6l", " 6 Left", " 6 L", 1, 3984.0f),
+            XOVER_SPLIT("_7l", " 7 Left", " 7 L", 0, 10000.0f),
 
-            XOVER_SPLIT("_1r", " 1 Right", 0, 40.0f),
-            XOVER_SPLIT("_2r", " 2 Right", 1, 100.0f),
-            XOVER_SPLIT("_3r", " 3 Right", 0, 252.0f),
-            XOVER_SPLIT("_4r", " 4 Right", 1, 632.0f),
-            XOVER_SPLIT("_5r", " 5 Right", 0, 1587.0f),
-            XOVER_SPLIT("_6r", " 6 Right", 1, 3984.0f),
-            XOVER_SPLIT("_7r", " 7 Right", 0, 10000.0f),
+            XOVER_SPLIT("_1r", " 1 Right", " 1 R", 0, 40.0f),
+            XOVER_SPLIT("_2r", " 2 Right", " 2 R", 1, 100.0f),
+            XOVER_SPLIT("_3r", " 3 Right", " 3 R", 0, 252.0f),
+            XOVER_SPLIT("_4r", " 4 Right", " 4 R", 1, 632.0f),
+            XOVER_SPLIT("_5r", " 5 Right", " 5 R", 0, 1587.0f),
+            XOVER_SPLIT("_6r", " 6 Right", " 6 R", 1, 3984.0f),
+            XOVER_SPLIT("_7r", " 7 Right", " 7 R", 0, 10000.0f),
 
             XOVER_BAND("_0l", " 0 Left", 0, 8, 10.0f, 40.0f),
             XOVER_BAND("_1l", " 1 Left", 1, 8, 40.0f, 100.0f),
@@ -400,21 +400,21 @@ namespace lsp
             XOVER_FFT_METERS("_s", " Mid"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1m", " 1 Mid", 0, 40.0f),
-            XOVER_SPLIT("_2m", " 2 Mid", 1, 100.0f),
-            XOVER_SPLIT("_3m", " 3 Mid", 0, 252.0f),
-            XOVER_SPLIT("_4m", " 4 Mid", 1, 632.0f),
-            XOVER_SPLIT("_5m", " 5 Mid", 0, 1587.0f),
-            XOVER_SPLIT("_6m", " 6 Mid", 1, 3984.0f),
-            XOVER_SPLIT("_7m", " 7 Mid", 0, 10000.0f),
+            XOVER_SPLIT("_1m", " 1 Mid", " 1 M", 0, 40.0f),
+            XOVER_SPLIT("_2m", " 2 Mid", " 2 M", 1, 100.0f),
+            XOVER_SPLIT("_3m", " 3 Mid", " 3 M", 0, 252.0f),
+            XOVER_SPLIT("_4m", " 4 Mid", " 4 M", 1, 632.0f),
+            XOVER_SPLIT("_5m", " 5 Mid", " 5 M", 0, 1587.0f),
+            XOVER_SPLIT("_6m", " 6 Mid", " 6 M", 1, 3984.0f),
+            XOVER_SPLIT("_7m", " 7 Mid", " 7 M", 0, 10000.0f),
 
-            XOVER_SPLIT("_1s", " 1 Side", 0, 40.0f),
-            XOVER_SPLIT("_2s", " 2 Side", 1, 100.0f),
-            XOVER_SPLIT("_3s", " 3 Side", 0, 252.0f),
-            XOVER_SPLIT("_4s", " 4 Side", 1, 632.0f),
-            XOVER_SPLIT("_5s", " 5 Side", 0, 1587.0f),
-            XOVER_SPLIT("_6s", " 6 Side", 1, 3984.0f),
-            XOVER_SPLIT("_7s", " 7 Side", 0, 10000.0f),
+            XOVER_SPLIT("_1s", " 1 Side", " 1 S", 0, 40.0f),
+            XOVER_SPLIT("_2s", " 2 Side", " 2 S", 1, 100.0f),
+            XOVER_SPLIT("_3s", " 3 Side", " 3 S", 0, 252.0f),
+            XOVER_SPLIT("_4s", " 4 Side", " 4 S", 1, 632.0f),
+            XOVER_SPLIT("_5s", " 5 Side", " 5 S", 0, 1587.0f),
+            XOVER_SPLIT("_6s", " 6 Side", " 6 S", 1, 3984.0f),
+            XOVER_SPLIT("_7s", " 7 Side", " 7 S", 0, 10000.0f),
 
             XOVER_BAND("_0m", " 0 Mid", 0, 8, 10.0f, 40.0f),
             XOVER_BAND("_1m", " 1 Mid", 1, 8, 40.0f, 100.0f),
