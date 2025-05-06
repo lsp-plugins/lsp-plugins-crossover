@@ -79,68 +79,68 @@ namespace lsp
         };
 
         #define XOVER_COMMON \
-                BYPASS, \
-                COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
-                SWITCH("smapply", "Solo/Mute apply to bands", 1), \
-                AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
-                AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
-                LOG_CONTROL("react", "FFT reactivity", "Reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
-                AMP_GAIN("shift", "Shift gain", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
-                LOG_CONTROL("zoom", "Graph zoom", "Zoom", U_GAIN_AMP, crossover_metadata::ZOOM)
+            BYPASS, \
+            COMBO("mode", "Crossover mode", "Mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
+            SWITCH("smapply", "Solo/Mute apply to bands", "Solo/Mute apply", 1), \
+            AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
+            AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
+            LOG_CONTROL("react", "FFT reactivity", "Reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
+            AMP_GAIN("shift", "Shift gain", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
+            LOG_CONTROL("zoom", "Graph zoom", "Zoom", U_GAIN_AMP, crossover_metadata::ZOOM)
 
-        #define XOVER_CHANNEL(id, label) \
-                SWITCH("flt" id, "Band filter curves" label, 1.0f), \
-                SWITCH("crv" id, "Overall filter curve" label, 1.0f), \
-                MESH("ag" id, "Amplitude graph" label, 2, crossover_metadata::MESH_POINTS)
+        #define XOVER_CHANNEL(id, label, alias) \
+            SWITCH("flt" id, "Band filter curves" label, "Show band" alias, 1.0f), \
+            SWITCH("crv" id, "Overall filter curve" label, "Show flt" alias, 1.0f), \
+            MESH("ag" id, "Amplitude graph" label, 2, crossover_metadata::MESH_POINTS)
 
-        #define XOVER_FFT_METERS(id, label) \
-                SWITCH("ife" id, "Input FFT graph enable" label, 1.0f), \
-                SWITCH("ofe" id, "Output FFT graph enable" label, 1.0f), \
-                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
-                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
+        #define XOVER_FFT_METERS(id, label, alias) \
+            SWITCH("ife" id, "Input FFT graph enable" label, "FFT In" alias, 1.0f), \
+            SWITCH("ofe" id, "Output FFT graph enable" label, "FFT Out" alias, 1.0f), \
+            MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
+            MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
 
         #define XOVER_CHANNEL_METERS(id, label) \
-                METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
-                METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
+            METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
+            METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
 
         #define XOVER_SPLIT(id, label, alias, slope, freq) \
-                COMBO("frs" id, "Frequency range slope" label, crossover_metadata::SLOPE_DFL * slope, crossover_slopes), \
-                LOG_CONTROL_DFL("sf" id, "Split frequency" label, "Split" alias, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
+            COMBO("frs" id, "Frequency range slope" label, "Frq slope" alias, crossover_metadata::SLOPE_DFL * slope, crossover_slopes), \
+            LOG_CONTROL_DFL("sf" id, "Split frequency" label, "Split" alias, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
 
         #define XOVER_BAND(id, label, alias, x, total, fe, fs) \
-                SWITCH("bs" id, "Solo band" label, 0.0f), \
-                SWITCH("bm" id, "Mute band" label, 0.0f), \
-                SWITCH("bp" id, "Phase invert" label, 0.0f), \
-                LOG_CONTROL("bg" id, "Band gain" label, "Gain " alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
-                CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
-                HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
-                METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
-                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
+            SWITCH("bs" id, "Solo band" label, "Solo" alias, 0.0f), \
+            SWITCH("bm" id, "Mute band" label, "Mute" alias, 0.0f), \
+            SWITCH("bp" id, "Phase invert" label, "Phase" alias, 0.0f), \
+            LOG_CONTROL("bg" id, "Band gain" label, "Gain " alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
+            CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
+            HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
+            METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
+            MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
 
         #define XOVER_BAND_METER_MONO(id, label) \
-                METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)
 
         #define XOVER_BAND_METER_STEREO(id, label) \
-                METER_GAIN("blm" id "l", "Band level meter" label " Left", GAIN_AMP_P_24_DB), \
-                METER_GAIN("blm" id "r", "Band level meter" label " Right", GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id "l", "Band level meter" label " Left", GAIN_AMP_P_24_DB), \
+            METER_GAIN("blm" id "r", "Band level meter" label " Right", GAIN_AMP_P_24_DB)
 
         #define XOVER_BAND_METER_MS(id, label) \
-                METER_GAIN("blm" id "m", "Band level meter" label " Mid", GAIN_AMP_P_24_DB), \
-                METER_GAIN("blm" id "s", "Band level meter" label " Side", GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id "m", "Band level meter" label " Mid", GAIN_AMP_P_24_DB), \
+            METER_GAIN("blm" id "s", "Band level meter" label " Side", GAIN_AMP_P_24_DB)
 
         #define XOVER_GROUP_PORTS(i) \
-                MONO_PORT_GROUP_PORT(xover_pg_mono_ ## i, "band" #i); \
-                STEREO_PORT_GROUP_PORTS(xover_pg_stereo_ ## i, "band" #i "l", "band" #i "r"); \
-                MS_PORT_GROUP_PORTS(xover_pg_ms_ ## i, "band" #i "m", "band" #i "s");
+            MONO_PORT_GROUP_PORT(xover_pg_mono_ ## i, "band" #i); \
+            STEREO_PORT_GROUP_PORTS(xover_pg_stereo_ ## i, "band" #i "l", "band" #i "r"); \
+            MS_PORT_GROUP_PORTS(xover_pg_ms_ ## i, "band" #i "m", "band" #i "s");
 
         #define XOVER_MONO_GROUP(i) \
-                { "mono_band" #i, "Mono band " #i " output",        GRP_MONO,       PGF_OUT,    xover_pg_mono_ ## i ##_ports        }
+            { "mono_band" #i, "Mono band " #i " output",        GRP_MONO,       PGF_OUT,    xover_pg_mono_ ## i ##_ports        }
 
         #define XOVER_STEREO_GROUP(i) \
-                { "stereo_band" #i, "Stereo band " #i " output",    GRP_STEREO,     PGF_OUT,    xover_pg_stereo_ ## i ##_ports      }
+            { "stereo_band" #i, "Stereo band " #i " output",    GRP_STEREO,     PGF_OUT,    xover_pg_stereo_ ## i ##_ports      }
 
         #define XOVER_MS_GROUP(i) \
-                { "ms_band" #i, "Mid/side band " #i " output",      GRP_MS,         PGF_OUT,    xover_pg_ms_ ## i ##_ports          }
+            { "ms_band" #i, "Mid/side band " #i " output",      GRP_MS,         PGF_OUT,    xover_pg_ms_ ## i ##_ports          }
 
         XOVER_GROUP_PORTS(0);
         XOVER_GROUP_PORTS(1);
@@ -206,8 +206,8 @@ namespace lsp
             AUDIO_OUTPUT("band7", "Band Output 7"),
 
             XOVER_COMMON,
-            XOVER_CHANNEL("", ""),
-            XOVER_FFT_METERS("", ""),
+            XOVER_CHANNEL("", "", ""),
+            XOVER_FFT_METERS("", "", ""),
             XOVER_CHANNEL_METERS("", ""),
 
             XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
@@ -260,10 +260,10 @@ namespace lsp
             AUDIO_OUTPUT("band7r", "Band Output 7 Right"),
 
             XOVER_COMMON,
-            XOVER_CHANNEL("", ""),
-            XOVER_FFT_METERS("_l", " Left"),
+            XOVER_CHANNEL("", "", ""),
+            XOVER_FFT_METERS("_l", " Left", " L"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_r", " Right"),
+            XOVER_FFT_METERS("_r", " Right", " R"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
             XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
@@ -316,12 +316,12 @@ namespace lsp
             AUDIO_OUTPUT("band7r", "Band Output 7 Right"),
 
             XOVER_COMMON,
-            COMBO("sel", "Processor selector", 0.0f, crossover_selector_lr),
-            XOVER_CHANNEL("_l", " Left"),
-            XOVER_CHANNEL("_r", " Right"),
-            XOVER_FFT_METERS("_l", " Left"),
+            COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_lr),
+            XOVER_CHANNEL("_l", " Left", " L"),
+            XOVER_CHANNEL("_r", " Right", " R"),
+            XOVER_FFT_METERS("_l", " Left", " L"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_r", " Right"),
+            XOVER_FFT_METERS("_r", " Right", " R"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
             XOVER_SPLIT("_1l", " 1 Left", " 1 L", 0, 40.0f),
@@ -391,13 +391,13 @@ namespace lsp
             AUDIO_OUTPUT("band7s", "Band Output 7 Side"),
 
             XOVER_COMMON,
-            COMBO("sel", "Processor selector", 0.0f, crossover_selector_ms),
-            SWITCH("msout", "Mid/Side output", 0.0f),
-            XOVER_CHANNEL("_m", " Mid"),
-            XOVER_CHANNEL("_s", " Side"),
-            XOVER_FFT_METERS("_m", " Mid"),
+            COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_ms),
+            SWITCH("msout", "Mid/Side output", "M/S output", 0.0f),
+            XOVER_CHANNEL("_m", " Mid", " M"),
+            XOVER_CHANNEL("_s", " Side", " S"),
+            XOVER_FFT_METERS("_m", " Mid", " M"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_s", " Mid"),
+            XOVER_FFT_METERS("_s", " Side", " S"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
             XOVER_SPLIT("_1m", " 1 Mid", " 1 M", 0, 40.0f),
