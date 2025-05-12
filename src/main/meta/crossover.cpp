@@ -111,8 +111,8 @@ namespace lsp
             SWITCH("bs" id, "Solo band" label, "Solo" alias, 0.0f), \
             SWITCH("bm" id, "Mute band" label, "Mute" alias, 0.0f), \
             SWITCH("bp" id, "Phase invert" label, "Phase" alias, 0.0f), \
-            LOG_CONTROL("bg" id, "Band gain" label, "Gain " alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
-            CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
+            LOG_CONTROL("bg" id, "Band gain" label, "Gain" alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
+            CONTROL("bd" id, "Band delay" label, "Delay" alias, U_MSEC, crossover_metadata::DELAY), \
             HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
             METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
             MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
