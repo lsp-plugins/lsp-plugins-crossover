@@ -82,10 +82,10 @@ namespace lsp
             BYPASS, \
             COMBO("mode", "Crossover mode", "Mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
             SWITCH("smapply", "Solo/Mute apply to bands", "Solo/Mute apply", 1), \
-            AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
-            AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
+            AMP_GAIN("g_in", "Input gain", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
+            AMP_GAIN("g_out", "Output gain", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
             LOG_CONTROL("react", "FFT reactivity", "Reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
-            AMP_GAIN("shift", "Shift gain", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
+            AMP_GAIN("shift", "Shift gain", "Shift", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
             LOG_CONTROL("zoom", "Graph zoom", "Zoom", U_GAIN_AMP, crossover_metadata::ZOOM)
 
         #define XOVER_CHANNEL(id, label, alias) \
