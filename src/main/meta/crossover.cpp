@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       25
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       26
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -79,68 +79,68 @@ namespace lsp
         };
 
         #define XOVER_COMMON \
-                BYPASS, \
-                COMBO("mode", "Crossover mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
-                SWITCH("smapply", "Solo/Mute apply to bands", 1), \
-                AMP_GAIN("g_in", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
-                AMP_GAIN("g_out", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
-                LOG_CONTROL("react", "FFT reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
-                AMP_GAIN("shift", "Shift gain", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
-                LOG_CONTROL("zoom", "Graph zoom", U_GAIN_AMP, crossover_metadata::ZOOM)
+            BYPASS, \
+            COMBO("mode", "Crossover mode", "Mode", crossover_metadata::CROSS_CLASSIC, crossover_op_modes), \
+            SWITCH("smapply", "Solo/Mute apply to bands", "Solo/Mute apply", 1), \
+            AMP_GAIN("g_in", "Input gain", "Input gain", crossover_metadata::IN_GAIN_DFL, 10.0f), \
+            AMP_GAIN("g_out", "Output gain", "Output gain", crossover_metadata::OUT_GAIN_DFL, 10.0f), \
+            LOG_CONTROL("react", "FFT reactivity", "Reactivity", U_MSEC, crossover_metadata::REACT_TIME), \
+            AMP_GAIN("shift", "Shift gain", "Shift", GAIN_AMP_0_DB, GAIN_AMP_P_60_DB), \
+            LOG_CONTROL("zoom", "Graph zoom", "Zoom", U_GAIN_AMP, crossover_metadata::ZOOM)
 
-        #define XOVER_CHANNEL(id, label) \
-                SWITCH("flt" id, "Band filter curves" label, 1.0f), \
-                SWITCH("crv" id, "Overall filter curve" label, 1.0f), \
-                MESH("ag" id, "Amplitude graph" label, 2, crossover_metadata::MESH_POINTS)
+        #define XOVER_CHANNEL(id, label, alias) \
+            SWITCH("flt" id, "Band filter curves" label, "Show band" alias, 1.0f), \
+            SWITCH("crv" id, "Overall filter curve" label, "Show flt" alias, 1.0f), \
+            MESH("ag" id, "Amplitude graph" label, 2, crossover_metadata::MESH_POINTS)
 
-        #define XOVER_FFT_METERS(id, label) \
-                SWITCH("ife" id, "Input FFT graph enable" label, 1.0f), \
-                SWITCH("ofe" id, "Output FFT graph enable" label, 1.0f), \
-                MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
-                MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
+        #define XOVER_FFT_METERS(id, label, alias) \
+            SWITCH("ife" id, "Input FFT graph enable" label, "FFT In" alias, 1.0f), \
+            SWITCH("ofe" id, "Output FFT graph enable" label, "FFT Out" alias, 1.0f), \
+            MESH("ifg" id, "Input FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2), \
+            MESH("ofg" id, "Output FFT graph" label, 2, crossover_metadata::MESH_POINTS + 2)
 
         #define XOVER_CHANNEL_METERS(id, label) \
-                METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
-                METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
+            METER_GAIN("ilm" id, "Input level meter" label, GAIN_AMP_P_24_DB), \
+            METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
 
-        #define XOVER_SPLIT(id, label, slope, freq) \
-                COMBO("frs" id, "Frequency range slope" label, crossover_metadata::SLOPE_DFL * slope, crossover_slopes), \
-                LOG_CONTROL_DFL("sf" id, "Split frequency" label, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
+        #define XOVER_SPLIT(id, label, alias, slope, freq) \
+            COMBO("frs" id, "Frequency range slope" label, "Frq slope" alias, crossover_metadata::SLOPE_DFL * slope, crossover_slopes), \
+            LOG_CONTROL_DFL("sf" id, "Split frequency" label, "Split" alias, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
 
-        #define XOVER_BAND(id, label, x, total, fe, fs) \
-                SWITCH("bs" id, "Solo band" label, 0.0f), \
-                SWITCH("bm" id, "Mute band" label, 0.0f), \
-                SWITCH("bp" id, "Phase invert" label, 0.0f), \
-                LOG_CONTROL("bg" id, "Band gain" label, U_GAIN_AMP, crossover_metadata::MAKEUP), \
-                CONTROL("bd" id, "Band delay" label, U_MSEC, crossover_metadata::DELAY), \
-                HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
-                METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
-                MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
+        #define XOVER_BAND(id, label, alias, x, total, fe, fs) \
+            SWITCH("bs" id, "Solo band" label, "Solo" alias, 0.0f), \
+            SWITCH("bm" id, "Mute band" label, "Mute" alias, 0.0f), \
+            SWITCH("bp" id, "Phase invert" label, "Phase" alias, 0.0f), \
+            LOG_CONTROL("bg" id, "Band gain" label, "Gain" alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
+            CONTROL("bd" id, "Band delay" label, "Delay" alias, U_MSEC, crossover_metadata::DELAY), \
+            HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
+            METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
+            MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
 
         #define XOVER_BAND_METER_MONO(id, label) \
-                METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id, "Band level meter" label, GAIN_AMP_P_24_DB)
 
         #define XOVER_BAND_METER_STEREO(id, label) \
-                METER_GAIN("blm" id "l", "Band level meter" label " Left", GAIN_AMP_P_24_DB), \
-                METER_GAIN("blm" id "r", "Band level meter" label " Right", GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id "l", "Band level meter" label " Left", GAIN_AMP_P_24_DB), \
+            METER_GAIN("blm" id "r", "Band level meter" label " Right", GAIN_AMP_P_24_DB)
 
         #define XOVER_BAND_METER_MS(id, label) \
-                METER_GAIN("blm" id "m", "Band level meter" label " Mid", GAIN_AMP_P_24_DB), \
-                METER_GAIN("blm" id "s", "Band level meter" label " Side", GAIN_AMP_P_24_DB)
+            METER_GAIN("blm" id "m", "Band level meter" label " Mid", GAIN_AMP_P_24_DB), \
+            METER_GAIN("blm" id "s", "Band level meter" label " Side", GAIN_AMP_P_24_DB)
 
         #define XOVER_GROUP_PORTS(i) \
-                MONO_PORT_GROUP_PORT(xover_pg_mono_ ## i, "band" #i); \
-                STEREO_PORT_GROUP_PORTS(xover_pg_stereo_ ## i, "band" #i "l", "band" #i "r"); \
-                MS_PORT_GROUP_PORTS(xover_pg_ms_ ## i, "band" #i "m", "band" #i "s");
+            MONO_PORT_GROUP_PORT(xover_pg_mono_ ## i, "band" #i); \
+            STEREO_PORT_GROUP_PORTS(xover_pg_stereo_ ## i, "band" #i "l", "band" #i "r"); \
+            MS_PORT_GROUP_PORTS(xover_pg_ms_ ## i, "band" #i "m", "band" #i "s");
 
         #define XOVER_MONO_GROUP(i) \
-                { "mono_band" #i, "Mono band " #i " output",        GRP_MONO,       PGF_OUT,    xover_pg_mono_ ## i ##_ports        }
+            { "mono_band" #i, "Mono band " #i " output",        GRP_MONO,       PGF_OUT,    xover_pg_mono_ ## i ##_ports        }
 
         #define XOVER_STEREO_GROUP(i) \
-                { "stereo_band" #i, "Stereo band " #i " output",    GRP_STEREO,     PGF_OUT,    xover_pg_stereo_ ## i ##_ports      }
+            { "stereo_band" #i, "Stereo band " #i " output",    GRP_STEREO,     PGF_OUT,    xover_pg_stereo_ ## i ##_ports      }
 
         #define XOVER_MS_GROUP(i) \
-                { "ms_band" #i, "Mid/side band " #i " output",      GRP_MS,         PGF_OUT,    xover_pg_ms_ ## i ##_ports          }
+            { "ms_band" #i, "Mid/side band " #i " output",      GRP_MS,         PGF_OUT,    xover_pg_ms_ ## i ##_ports          }
 
         XOVER_GROUP_PORTS(0);
         XOVER_GROUP_PORTS(1);
@@ -206,26 +206,26 @@ namespace lsp
             AUDIO_OUTPUT("band7", "Band Output 7"),
 
             XOVER_COMMON,
-            XOVER_CHANNEL("", ""),
-            XOVER_FFT_METERS("", ""),
+            XOVER_CHANNEL("", "", ""),
+            XOVER_FFT_METERS("", "", ""),
             XOVER_CHANNEL_METERS("", ""),
 
-            XOVER_SPLIT("_1", " 1", 0, 40.0f),
-            XOVER_SPLIT("_2", " 2", 1, 100.0f),
-            XOVER_SPLIT("_3", " 3", 0, 252.0f),
-            XOVER_SPLIT("_4", " 4", 1, 632.0f),
-            XOVER_SPLIT("_5", " 5", 0, 1587.0f),
-            XOVER_SPLIT("_6", " 6", 1, 3984.0f),
-            XOVER_SPLIT("_7", " 7", 0, 10000.0f),
+            XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
+            XOVER_SPLIT("_2", " 2", " 2", 1, 100.0f),
+            XOVER_SPLIT("_3", " 3", " 3", 0, 252.0f),
+            XOVER_SPLIT("_4", " 4", " 4", 1, 632.0f),
+            XOVER_SPLIT("_5", " 5", " 5", 0, 1587.0f),
+            XOVER_SPLIT("_6", " 6", " 6", 1, 3984.0f),
+            XOVER_SPLIT("_7", " 7", " 7", 0, 10000.0f),
 
-            XOVER_BAND("_0", " 0", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1", " 1", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2", " 2", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3", " 3", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4", " 4", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5", " 5", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6", " 6", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7", " 7", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0", " 0", " 0", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1", " 1", " 1", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2", " 2", " 2", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3", " 3", " 3", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4", " 4", " 4", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5", " 5", " 5", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6", " 6", " 6", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7", " 7", " 7", 7, 8, 10000.0f, 20000.0f),
 
             XOVER_BAND_METER_MONO("_0", " 0"),
             XOVER_BAND_METER_MONO("_1", " 1"),
@@ -260,28 +260,28 @@ namespace lsp
             AUDIO_OUTPUT("band7r", "Band Output 7 Right"),
 
             XOVER_COMMON,
-            XOVER_CHANNEL("", ""),
-            XOVER_FFT_METERS("_l", " Left"),
+            XOVER_CHANNEL("", "", ""),
+            XOVER_FFT_METERS("_l", " Left", " L"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_r", " Right"),
+            XOVER_FFT_METERS("_r", " Right", " R"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1", " 1", 0, 40.0f),
-            XOVER_SPLIT("_2", " 2", 1, 100.0f),
-            XOVER_SPLIT("_3", " 3", 0, 252.0f),
-            XOVER_SPLIT("_4", " 4", 1, 632.0f),
-            XOVER_SPLIT("_5", " 5", 0, 1587.0f),
-            XOVER_SPLIT("_6", " 6", 1, 3984.0f),
-            XOVER_SPLIT("_7", " 7", 0, 10000.0f),
+            XOVER_SPLIT("_1", " 1", " 1", 0, 40.0f),
+            XOVER_SPLIT("_2", " 2", " 2", 1, 100.0f),
+            XOVER_SPLIT("_3", " 3", " 3", 0, 252.0f),
+            XOVER_SPLIT("_4", " 4", " 4", 1, 632.0f),
+            XOVER_SPLIT("_5", " 5", " 5", 0, 1587.0f),
+            XOVER_SPLIT("_6", " 6", " 6", 1, 3984.0f),
+            XOVER_SPLIT("_7", " 7", " 7", 0, 10000.0f),
 
-            XOVER_BAND("_0", " 0", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1", " 1", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2", " 2", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3", " 3", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4", " 4", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5", " 5", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6", " 6", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7", " 7", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0", " 0", " 0", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1", " 1", " 1", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2", " 2", " 2", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3", " 3", " 3", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4", " 4", " 4", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5", " 5", " 5", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6", " 6", " 6", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7", " 7", " 7", 7, 8, 10000.0f, 20000.0f),
 
             XOVER_BAND_METER_STEREO("_0", " 0"),
             XOVER_BAND_METER_STEREO("_1", " 1"),
@@ -316,47 +316,47 @@ namespace lsp
             AUDIO_OUTPUT("band7r", "Band Output 7 Right"),
 
             XOVER_COMMON,
-            COMBO("sel", "Processor selector", 0.0f, crossover_selector_lr),
-            XOVER_CHANNEL("_l", " Left"),
-            XOVER_CHANNEL("_r", " Right"),
-            XOVER_FFT_METERS("_l", " Left"),
+            COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_lr),
+            XOVER_CHANNEL("_l", " Left", " L"),
+            XOVER_CHANNEL("_r", " Right", " R"),
+            XOVER_FFT_METERS("_l", " Left", " L"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_r", " Right"),
+            XOVER_FFT_METERS("_r", " Right", " R"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1l", " 1 Left", 0, 40.0f),
-            XOVER_SPLIT("_2l", " 2 Left", 1, 100.0f),
-            XOVER_SPLIT("_3l", " 3 Left", 0, 252.0f),
-            XOVER_SPLIT("_4l", " 4 Left", 1, 632.0f),
-            XOVER_SPLIT("_5l", " 5 Left", 0, 1587.0f),
-            XOVER_SPLIT("_6l", " 6 Left", 1, 3984.0f),
-            XOVER_SPLIT("_7l", " 7 Left", 0, 10000.0f),
+            XOVER_SPLIT("_1l", " 1 Left", " 1 L", 0, 40.0f),
+            XOVER_SPLIT("_2l", " 2 Left", " 2 L", 1, 100.0f),
+            XOVER_SPLIT("_3l", " 3 Left", " 3 L", 0, 252.0f),
+            XOVER_SPLIT("_4l", " 4 Left", " 4 L", 1, 632.0f),
+            XOVER_SPLIT("_5l", " 5 Left", " 5 L", 0, 1587.0f),
+            XOVER_SPLIT("_6l", " 6 Left", " 6 L", 1, 3984.0f),
+            XOVER_SPLIT("_7l", " 7 Left", " 7 L", 0, 10000.0f),
 
-            XOVER_SPLIT("_1r", " 1 Right", 0, 40.0f),
-            XOVER_SPLIT("_2r", " 2 Right", 1, 100.0f),
-            XOVER_SPLIT("_3r", " 3 Right", 0, 252.0f),
-            XOVER_SPLIT("_4r", " 4 Right", 1, 632.0f),
-            XOVER_SPLIT("_5r", " 5 Right", 0, 1587.0f),
-            XOVER_SPLIT("_6r", " 6 Right", 1, 3984.0f),
-            XOVER_SPLIT("_7r", " 7 Right", 0, 10000.0f),
+            XOVER_SPLIT("_1r", " 1 Right", " 1 R", 0, 40.0f),
+            XOVER_SPLIT("_2r", " 2 Right", " 2 R", 1, 100.0f),
+            XOVER_SPLIT("_3r", " 3 Right", " 3 R", 0, 252.0f),
+            XOVER_SPLIT("_4r", " 4 Right", " 4 R", 1, 632.0f),
+            XOVER_SPLIT("_5r", " 5 Right", " 5 R", 0, 1587.0f),
+            XOVER_SPLIT("_6r", " 6 Right", " 6 R", 1, 3984.0f),
+            XOVER_SPLIT("_7r", " 7 Right", " 7 R", 0, 10000.0f),
 
-            XOVER_BAND("_0l", " 0 Left", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1l", " 1 Left", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2l", " 2 Left", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3l", " 3 Left", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4l", " 4 Left", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5l", " 5 Left", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6l", " 6 Left", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7l", " 7 Left", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0l", " 0 Left", " 0 L", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1l", " 1 Left", " 1 L", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2l", " 2 Left", " 2 L", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3l", " 3 Left", " 3 L", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4l", " 4 Left", " 4 L", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5l", " 5 Left", " 5 L", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6l", " 6 Left", " 6 L", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7l", " 7 Left", " 7 L", 7, 8, 10000.0f, 20000.0f),
 
-            XOVER_BAND("_0r", " 0 Right", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1r", " 1 Right", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2r", " 2 Right", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3r", " 3 Right", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4r", " 4 Right", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5r", " 5 Right", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6r", " 6 Right", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7r", " 7 Right", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0r", " 0 Right", " 0 R", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1r", " 1 Right", " 1 R", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2r", " 2 Right", " 2 R", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3r", " 3 Right", " 3 R", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4r", " 4 Right", " 4 R", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5r", " 5 Right", " 5 R", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6r", " 6 Right", " 6 R", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7r", " 7 Right", " 7 R", 7, 8, 10000.0f, 20000.0f),
 
             XOVER_BAND_METER_STEREO("_0", " 0"),
             XOVER_BAND_METER_STEREO("_1", " 1"),
@@ -391,48 +391,48 @@ namespace lsp
             AUDIO_OUTPUT("band7s", "Band Output 7 Side"),
 
             XOVER_COMMON,
-            COMBO("sel", "Processor selector", 0.0f, crossover_selector_ms),
-            SWITCH("msout", "Mid/Side output", 0.0f),
-            XOVER_CHANNEL("_m", " Mid"),
-            XOVER_CHANNEL("_s", " Side"),
-            XOVER_FFT_METERS("_m", " Mid"),
+            COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_ms),
+            SWITCH("msout", "Mid/Side output", "M/S output", 0.0f),
+            XOVER_CHANNEL("_m", " Mid", " M"),
+            XOVER_CHANNEL("_s", " Side", " S"),
+            XOVER_FFT_METERS("_m", " Mid", " M"),
             XOVER_CHANNEL_METERS("_l", " Left"),
-            XOVER_FFT_METERS("_s", " Mid"),
+            XOVER_FFT_METERS("_s", " Side", " S"),
             XOVER_CHANNEL_METERS("_r", " Right"),
 
-            XOVER_SPLIT("_1m", " 1 Mid", 0, 40.0f),
-            XOVER_SPLIT("_2m", " 2 Mid", 1, 100.0f),
-            XOVER_SPLIT("_3m", " 3 Mid", 0, 252.0f),
-            XOVER_SPLIT("_4m", " 4 Mid", 1, 632.0f),
-            XOVER_SPLIT("_5m", " 5 Mid", 0, 1587.0f),
-            XOVER_SPLIT("_6m", " 6 Mid", 1, 3984.0f),
-            XOVER_SPLIT("_7m", " 7 Mid", 0, 10000.0f),
+            XOVER_SPLIT("_1m", " 1 Mid", " 1 M", 0, 40.0f),
+            XOVER_SPLIT("_2m", " 2 Mid", " 2 M", 1, 100.0f),
+            XOVER_SPLIT("_3m", " 3 Mid", " 3 M", 0, 252.0f),
+            XOVER_SPLIT("_4m", " 4 Mid", " 4 M", 1, 632.0f),
+            XOVER_SPLIT("_5m", " 5 Mid", " 5 M", 0, 1587.0f),
+            XOVER_SPLIT("_6m", " 6 Mid", " 6 M", 1, 3984.0f),
+            XOVER_SPLIT("_7m", " 7 Mid", " 7 M", 0, 10000.0f),
 
-            XOVER_SPLIT("_1s", " 1 Side", 0, 40.0f),
-            XOVER_SPLIT("_2s", " 2 Side", 1, 100.0f),
-            XOVER_SPLIT("_3s", " 3 Side", 0, 252.0f),
-            XOVER_SPLIT("_4s", " 4 Side", 1, 632.0f),
-            XOVER_SPLIT("_5s", " 5 Side", 0, 1587.0f),
-            XOVER_SPLIT("_6s", " 6 Side", 1, 3984.0f),
-            XOVER_SPLIT("_7s", " 7 Side", 0, 10000.0f),
+            XOVER_SPLIT("_1s", " 1 Side", " 1 S", 0, 40.0f),
+            XOVER_SPLIT("_2s", " 2 Side", " 2 S", 1, 100.0f),
+            XOVER_SPLIT("_3s", " 3 Side", " 3 S", 0, 252.0f),
+            XOVER_SPLIT("_4s", " 4 Side", " 4 S", 1, 632.0f),
+            XOVER_SPLIT("_5s", " 5 Side", " 5 S", 0, 1587.0f),
+            XOVER_SPLIT("_6s", " 6 Side", " 6 S", 1, 3984.0f),
+            XOVER_SPLIT("_7s", " 7 Side", " 7 S", 0, 10000.0f),
 
-            XOVER_BAND("_0m", " 0 Mid", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1m", " 1 Mid", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2m", " 2 Mid", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3m", " 3 Mid", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4m", " 4 Mid", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5m", " 5 Mid", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6m", " 6 Mid", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7m", " 7 Mid", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0m", " 0 Mid", " 0 M", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1m", " 1 Mid", " 1 M", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2m", " 2 Mid", " 2 M", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3m", " 3 Mid", " 3 M", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4m", " 4 Mid", " 4 M", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5m", " 5 Mid", " 5 M", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6m", " 6 Mid", " 6 M", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7m", " 7 Mid", " 7 M", 7, 8, 10000.0f, 20000.0f),
 
-            XOVER_BAND("_0s", " 0 Side", 0, 8, 10.0f, 40.0f),
-            XOVER_BAND("_1s", " 1 Side", 1, 8, 40.0f, 100.0f),
-            XOVER_BAND("_2s", " 2 Side", 2, 8, 100.0f, 252.0f),
-            XOVER_BAND("_3s", " 3 Side", 3, 8, 252.0f, 632.0f),
-            XOVER_BAND("_4s", " 4 Side", 4, 8, 632.0f, 1587.0f),
-            XOVER_BAND("_5s", " 5 Side", 5, 8, 1587.0f, 3984.0f),
-            XOVER_BAND("_6s", " 6 Side", 6, 8, 3984.0f, 10000.0f),
-            XOVER_BAND("_7s", " 7 Side", 7, 8, 10000.0f, 20000.0f),
+            XOVER_BAND("_0s", " 0 Side", " 0 S", 0, 8, 10.0f, 40.0f),
+            XOVER_BAND("_1s", " 1 Side", " 1 S", 1, 8, 40.0f, 100.0f),
+            XOVER_BAND("_2s", " 2 Side", " 2 S", 2, 8, 100.0f, 252.0f),
+            XOVER_BAND("_3s", " 3 Side", " 3 S", 3, 8, 252.0f, 632.0f),
+            XOVER_BAND("_4s", " 4 Side", " 4 S", 4, 8, 632.0f, 1587.0f),
+            XOVER_BAND("_5s", " 5 Side", " 5 S", 5, 8, 1587.0f, 3984.0f),
+            XOVER_BAND("_6s", " 6 Side", " 6 S", 6, 8, 3984.0f, 10000.0f),
+            XOVER_BAND("_7s", " 7 Side", " 7 S", 7, 8, 10000.0f, 20000.0f),
 
             XOVER_BAND_METER_MS("_0", " 0"),
             XOVER_BAND_METER_MS("_1", " 1"),
