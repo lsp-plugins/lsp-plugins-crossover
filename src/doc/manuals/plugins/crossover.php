@@ -11,18 +11,18 @@
 <p>
     <?php if ($m == 'm') { ?>
     	This plugin performs split of mono input signal into separate frequency bands passed to individual mono output channels.
-    	Additinally it provides output monitoring channel to control individual channels or result of summing signals passed
+    	Additionally it provides output monitoring channel to control individual channels or result of summing signals passed
     	to individual mono output channels.
     <?php } elseif ($m == 's') { ?>
 		This plugin performs split of stereo input signal into separate frequency bands passed to individual stereo output channels.
-		Additinally it provides output monitoring channel to control individual channels or result of summing signals
+		Additionally it provides output monitoring channel to control individual channels or result of summing signals
 		passed to individual stereo output channels.
 	<?php } elseif ($m == 'lr') { ?>
-		This plugin performs split of individual channels of the stereo input stereo signal into separate frequency bands passed to 
-		individual stereo output channes. Additinally it provides output monitoring channel to control individual channels or
+		This plugin performs split of individual channels of the stereo input stereo signal into separate frequency bands passed to
+		individual stereo output channels. Additionally it provides output monitoring channel to control individual channels or
 		result of summing signals passed to individual stereo output channels.
 	<?php } else { ?>
-		This plugin converts the stereo input singnal into Mid/Side signal and performs split of the Mid/Side signal into separate frequency
+		This plugin converts the stereo input signal into Mid/Side signal and performs split of the Mid/Side signal into separate frequency
 		bands passed to individual Mid/Side output channels. Additionally it provides output monitoring channel to control the result of summing
 		signals passed to individual Mid/Side output channels. The output Mid/Side signal also can be inspected by pressing <b>MS Listen</b> button.
 	<?php } ?>
@@ -33,7 +33,7 @@
     By default plugin enables 4 frequency bands but overall number of used frequency bands may vary from 1 to 8.
     Each range of the frequency band can be adjusted by specifying the slope of the corresponding Low-pass and High-pass filters.
     The frequency graph allows to view characteristics of filters for each frequency band and the result of summing the frequency response
-    for all filters. For better audio engineering the plugin addionally provides FFT analysis of input and output signal.
+    for all filters. For better audio engineering the plugin additionally provides FFT analysis of input and output signal.
 </p>
 <p>
 	Additional <b>Linear Phase</b> mode allows to split audio signal into multiple frequency bands with linear phase shift.
@@ -42,7 +42,7 @@
 <ul>
 	<li>Unlike classic crossovers which use IIR (Infinite Impulse Response) filters to split signal into multiple bands and shift the phase
 	of the audio signal at band split points, the <b>Linear Phase</b> allows to use FIR (Finite Impulse Response) filters which are deprived of this.
-	<li>Unlike most IIR filters which are designed using bilinear transform, linear phase filters allow simulate their tranfer function
+	<li>Unlike most IIR filters which are designed using bilinear transform, linear phase filters allow simulate their transfer function
 	to look like the transfer function of analog filters, without deforming it's magnitude envelope near the nyquist frequency.</li>
 	<li>Unlike design of classic Linkwitz-Riley filters, the design of IIR filters provides shorter transition zone of the filter.</li>
 </ul>
