@@ -1,4 +1,28 @@
 <plugin resizable="true">
+
+	<!-- Control linking -->
+	<ui:for
+		id="port"
+		list="'bs'; 'bm'; 'bp'; 'bg'; 'bd'">
+		<ui:for id="i" first="0" count="8">
+			<ctl:link
+				id.1="${port}_${i}m" value.1=":${port}_${i}s"
+				id.2="${port}_${i}s" value.2=":${port}_${i}m"
+				activity=":clink" />
+		</ui:for>
+	</ui:for>
+	
+	<ui:for
+		id="port"
+		list="'frs'; 'sf'">
+		<ui:for id="i" first="1" count="7">
+			<ctl:link
+				id.1="${port}_${i}m" value.1=":${port}_${i}s"
+				id.2="${port}_${i}s" value.2=":${port}_${i}m"
+				activity=":clink" />
+		</ui:for>
+	</ui:for>
+
 	<vbox vspacing="4" hspacing="4" expand="true">
 
 		<grid rows="2" cols="5" vspacing="4" hspacing="4" expand="true">
@@ -229,6 +253,7 @@
 				<label text="labels.mode:"/>
 				<combo id="mode" pad.r="8" pad.v="4"/>
 				<void hexpand="true"/>
+				<button id="clink" ui:inject="Button_green" text="labels.chan.ms_link" />
 				<button id="smapply" text="labels.chan.sm_apply" size="22" pad.v="4" ui:inject="Button_green"/>
 				<vsep pad.h="2" bg.color="bg" reduce="true"/>
 				<label text="labels.filters" pad.l="6"/>

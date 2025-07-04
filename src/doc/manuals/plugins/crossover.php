@@ -59,6 +59,11 @@
 	</li>
 	<li><b>FFT In</b> - enables FFT analysis of the input signal for the corresponding input channel.
 	<li><b>FFT Out</b> - enables FFT analysis of the input signal for the corresponding input channel.
+	<?php if ($m == 'lr') { ?>
+		<li><b>L/R Link</b> - enables linking between Left and Right channel controls so change of one forces the sibling to become the same value.</li>
+	<?php } elseif ($m == 'ms') { ?>
+		<li><b>M/S Link</b> - enables linking between Mid and Side channel controls so change of one forces the sibling to become the same value.</li>
+	<?php } ?>
 	<li><b>S/M Apply</b> - applies effect of Solo/Mute buttons to corresponding frequency band's outputs.
 	<li><b>Filters</b> - shows filter characteristics of each band for the corresponding channel.
 	<li><b>Curve</b> - shows the output signal curve of each band for the corresponding channel.

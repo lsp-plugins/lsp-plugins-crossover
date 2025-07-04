@@ -1,4 +1,37 @@
 <plugin resizable="true">
+
+            SWITCH("bs" id, "Solo band" label, "Solo" alias, 0.0f), \
+            SWITCH("bm" id, "Mute band" label, "Mute" alias, 0.0f), \
+            SWITCH("bp" id, "Phase invert" label, "Phase" alias, 0.0f), \
+            LOG_CONTROL("bg" id, "Band gain" label, "Gain" alias, U_GAIN_AMP, crossover_metadata::MAKEUP), \
+            CONTROL("bd" id, "Band delay" label, "Delay" alias, U_MSEC, crossover_metadata::DELAY), \
+            HUE_CTL("hue" id, "Hue " label, float(x) / float(total)), \
+            METER("fre" id, "Frequency range end" label, U_HZ,  crossover_metadata::OUT_FREQ), \
+            MESH("bfc" id, "Band frequency chart" label, 2, crossover_metadata::MESH_POINTS + 4)
+
+	<!-- Control linking -->
+	<ui:for
+		id="port"
+		list="'bs'; 'bm'; 'bp'; 'bg'; 'bd'">
+		<ui:for id="i" first="0" count="8">
+			<ctl:link
+				id.1="${port}_${i}l" value.1=":${port}_${i}r"
+				id.2="${port}_${i}r" value.2=":${port}_${i}l"
+				activity=":clink" />
+		</ui:for>
+	</ui:for>
+	
+	<ui:for
+		id="port"
+		list="'frs'; 'sf'">
+		<ui:for id="i" first="1" count="7">
+			<ctl:link
+				id.1="${port}_${i}l" value.1=":${port}_${i}r"
+				id.2="${port}_${i}r" value.2=":${port}_${i}l"
+				activity=":clink" />
+		</ui:for>
+	</ui:for>
+
 	<vbox vspacing="4" hspacing="4" expand="true">
 
 		<grid rows="2" cols="5" vspacing="4" hspacing="4" expand="true">
@@ -229,6 +262,7 @@
 				<label text="labels.mode:" />
 				<combo id="mode" pad.r="8" pad.v="4"/>
 				<void hexpand="true" />
+				<button id="clink" ui:inject="Button_green" text="labels.chan.lr_link" />
 				<button id="smapply" text="labels.chan.sm_apply" size="22" pad.v="4" ui:inject="Button_green"/>
 				<vsep pad.h="2" bg.color="bg" reduce="true" />
 				<label text="labels.filters" pad.l="6"/>

@@ -3,6 +3,7 @@
 *******************************************************************************
 
 === 1.0.27 ===
+* Added left/right and mid/side linking in the UI.
 * Fixed bug in frequency editing for Mid/Side and Left/Right versions.
 
 === 1.0.26 ===
