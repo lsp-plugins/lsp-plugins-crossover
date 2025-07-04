@@ -41,6 +41,7 @@ namespace lsp
                     ui::IPort          *pFreq;
                     ui::IPort          *pSlope;         // Split enable port
 
+                    size_t              nChannel;       // Channel (left/right/mid/side)
                     float               fFreq;          // Split frequency
                     bool                bOn;            // Split is enabled
 
