@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -287,7 +287,10 @@ namespace lsp
             BIND_PORT(pZoom);
 
             if ((nMode == XOVER_LR) || (nMode == XOVER_MS))
+            {
+                SKIP_PORT("Separate channels link");
                 SKIP_PORT("Processor selector");
+            }
 
             if (nMode == XOVER_MS)
                 BIND_PORT(pMSOut);

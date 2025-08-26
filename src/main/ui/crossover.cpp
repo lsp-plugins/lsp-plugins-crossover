@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -178,7 +178,8 @@ namespace lsp
 
         void crossover_ui::add_splits()
         {
-            for (const char **fmt = fmtStrings; *fmt != NULL; ++fmt)
+            size_t channel      = 0;
+            for (const char **fmt = fmtStrings; *fmt != NULL; ++fmt, ++channel)
             {
                 for (size_t port_id=1; port_id<meta::crossover_metadata::BANDS_MAX; ++port_id)
                 {
@@ -189,6 +190,7 @@ namespace lsp
                     s.wMarker       = find_split_widget<tk::GraphMarker>(*fmt, "split_marker", port_id);
                     s.wNote         = find_split_widget<tk::GraphText>(*fmt, "split_note", port_id);
 
+                    s.nChannel      = channel;
                     s.pFreq         = find_port(*fmt, "sf", port_id);
                     s.pSlope        = find_port(*fmt, "frs", port_id);
 
@@ -338,7 +340,10 @@ namespace lsp
                     update_split_note_text(s);
 
                     if (flags & ui::PORT_USER_EDIT)
-                        freq_initiator = s;
+                    {
+                        if (s->bOn)
+                            freq_initiator = s;
+                    }
                     else if (s->bOn)
                         need_resort_active_splits = true;
                 }
@@ -361,7 +366,7 @@ namespace lsp
             for (lltl::iterator<split_t> it = vActiveSplits.values(); it; ++it)
             {
                 split_t *s = it.get();
-                if (!s->bOn)
+                if ((!s->bOn) || (s->nChannel != initiator->nChannel))
                     continue;
 
                 // Main logic

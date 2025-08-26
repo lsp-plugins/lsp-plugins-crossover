@@ -25,7 +25,7 @@
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       26
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       27
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -132,6 +132,9 @@ namespace lsp
             MONO_PORT_GROUP_PORT(xover_pg_mono_ ## i, "band" #i); \
             STEREO_PORT_GROUP_PORTS(xover_pg_stereo_ ## i, "band" #i "l", "band" #i "r"); \
             MS_PORT_GROUP_PORTS(xover_pg_ms_ ## i, "band" #i "m", "band" #i "s");
+
+        #define XOVER_LINK(id, label, alias) \
+            SWITCH(id, label, alias, 0.0f)
 
         #define XOVER_MONO_GROUP(i) \
             { "mono_band" #i, "Mono band " #i " output",        GRP_MONO,       PGF_OUT,    xover_pg_mono_ ## i ##_ports        }
@@ -316,6 +319,7 @@ namespace lsp
             AUDIO_OUTPUT("band7r", "Band Output 7 Right"),
 
             XOVER_COMMON,
+            XOVER_LINK("clink", "Left/Right controls link", "L/R link"),
             COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_lr),
             XOVER_CHANNEL("_l", " Left", " L"),
             XOVER_CHANNEL("_r", " Right", " R"),
@@ -391,6 +395,7 @@ namespace lsp
             AUDIO_OUTPUT("band7s", "Band Output 7 Side"),
 
             XOVER_COMMON,
+            XOVER_LINK("clink", "Mid/Side controls link", "M/S link"),
             COMBO("sel", "Processor selector", "Proc selector", 0.0f, crossover_selector_ms),
             SWITCH("msout", "Mid/Side output", "M/S output", 0.0f),
             XOVER_CHANNEL("_m", " Mid", " M"),
