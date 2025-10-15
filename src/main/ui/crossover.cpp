@@ -194,6 +194,9 @@ namespace lsp
                     s.pFreq         = find_port(*fmt, "sf", port_id);
                     s.pSlope        = find_port(*fmt, "frs", port_id);
 
+                    s.fFreq         = (s.pFreq != NULL) ? s.pFreq->value() : 0.0f;
+                    s.bOn           = (s.pSlope != NULL) ? s.pSlope->value() >= 0.5f : false;
+
                     if (s.wMarker != NULL)
                     {
                         s.wMarker->slots()->bind(tk::SLOT_MOUSE_IN, slot_split_mouse_in, this);
@@ -317,6 +320,7 @@ namespace lsp
 
             // Add splits widgets
             add_splits();
+            resort_active_splits();
 
             return STATUS_OK;
         }
@@ -362,6 +366,15 @@ namespace lsp
             bool left_position  = true;
             const float freq    = initiator->pFreq->value();
 
+            // Start editing
+            for (lltl::iterator<split_t> it = vActiveSplits.values(); it; ++it)
+            {
+                split_t *s = it.get();
+                if ((!s->bOn) || (s->nChannel != initiator->nChannel))
+                    continue;
+                s->pFreq->begin_edit();
+            }
+
             // Form unsorted list of active splits
             for (lltl::iterator<split_t> it = vActiveSplits.values(); it; ++it)
             {
@@ -397,6 +410,15 @@ namespace lsp
             // Notify all modified ports
             for (lltl::iterator<ui::IPort> it = notify_list.values(); it; ++it)
                 it->notify_all(ui::PORT_NONE);
+
+            // End editing
+            for (lltl::iterator<split_t> it = vActiveSplits.values(); it; ++it)
+            {
+                split_t *s = it.get();
+                if ((!s->bOn) || (s->nChannel != initiator->nChannel))
+                    continue;
+                s->pFreq->end_edit();
+            }
         }
 
 
