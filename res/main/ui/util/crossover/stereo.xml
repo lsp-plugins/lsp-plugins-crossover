@@ -41,6 +41,30 @@
 						<marker value="-48 db" ox="1" oy="0"/>
 					</ui:with>
 
+					<!-- Piano keys -->
+					<!-- <embed oy="2" start.x="midi_freq_start(12, 127)" start.y="0.12" end.x="midi_freq_end(12, 127)" end.y="0.07" valign="1" alpha="0" visibility=":_ui_graph_piano_layout">
+						<piano natural="false" note.min="12" note.max="127" height="24" editable="false" selectable="false" border="0"/>
+					</embed> -->
+
+					<!-- Octave text -->
+					<!-- <ui:with ox="0" oy="2" y="0.07" halign="1" valign="1" pgroup="0" priority="10" visibility=":_ui_graph_piano_layout" pad.b="26">
+						<ui:for id="octave" first="0" last="9">
+							<text x="midi_freq(12 * ${:octave + 1})" text="lists.notes.fmt.c" text:octave="${octave}" valign="1" halign="0"/>
+						</ui:for>
+					</ui:with> -->
+
+					<!-- Piano keys -->
+					<embed oy="4" start.x="midi_freq_start(12, 127)" start.y="20" end.x="midi_freq_end(12, 127)" end.y="44" valign="1" alpha="0" visibility=":_ui_graph_piano_layout">
+						<piano natural="false" note.min="12" note.max="127" height="24" editable="false" selectable="false" border="0"/>
+					</embed>
+
+					<!-- Octave text -->
+					<ui:with ox="0" oy="4" y="44" halign="1" valign="1" pgroup="0" priority="10" visibility=":_ui_graph_piano_layout" pad.b="2">
+						<ui:for id="octave" first="0" last="9">
+							<text x="midi_freq(12 * ${:octave + 1})" text="lists.notes.fmt.c" text:octave="${octave}" valign="1" halign="0"/>
+						</ui:for>
+					</ui:with>
+
 					<!-- Band markers -->
 					<ui:with
 						width="2"
@@ -73,10 +97,10 @@
 					<ui:for id="i" first="1" last="7">
 						<mesh id="bfc_${i}" width="2" fill="true" smooth="true" color="graph_mesh_cycle" color.hue=":hue_${i}" fcolor="graph_mesh_cycle" fcolor.hue=":hue_${i}" fcolor.a="0.9" visibility=":flt and (:frs_${i} igt 0)"/>
 					</ui:for>
-					<mesh id="ifg_l" oy=":_ui_zoomable_spectrum_graph ? 1 : 3"  width="0" color="left_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="left_in" visibility=":ife_l"/>
-					<mesh id="ifg_r" oy=":_ui_zoomable_spectrum_graph ? 1 : 3"  width="0" color="right_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="right_in" visibility=":ife_r"/>
-					<mesh id="ofg_l" oy=":_ui_zoomable_spectrum_graph ? 1 : 3"  width="2" color="left" visibility=":ofe_l"/>
-					<mesh id="ofg_r" oy=":_ui_zoomable_spectrum_graph ? 1 : 3"  width="2" color="right" visibility=":ofe_r"/>
+					<mesh id="ifg_l" oy=":_ui_zoomable_spectrum_graph ? 1 : 3" width="0" color="left_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="left_in" visibility=":ife_l"/>
+					<mesh id="ifg_r" oy=":_ui_zoomable_spectrum_graph ? 1 : 3" width="0" color="right_in" color.a="0.8" fcolor.a="0.8" fill="true" fcolor="right_in" visibility=":ife_r"/>
+					<mesh id="ofg_l" oy=":_ui_zoomable_spectrum_graph ? 1 : 3" width="2" color="left" visibility=":ofe_l"/>
+					<mesh id="ofg_r" oy=":_ui_zoomable_spectrum_graph ? 1 : 3" width="2" color="right" visibility=":ofe_r"/>
 
 					<mesh id="ag" width="3" color="bright_cyan" smooth="true" visibility=":crv"/>
 
@@ -89,6 +113,7 @@
 					<axis min="-72 db / (:zoom ** 3)" max="24 db * :zoom" color="graph_prim" angle="0.5" log="true"/>
 					<axis min="-1" max="1" visibility="false" angle="0.5"/>
 					<axis min="-72 db" max="24 db" color="graph_prim" angle="0.5" log="true" visibility="false"/>
+					<axis min="0" max=":_a_scaled_height" visibility="false" angle="0.5"/>
 
 					<!-- Text -->
 					<ui:with ox="0" oy="2" y="0" halign="1" valign="1">
@@ -217,11 +242,11 @@
 
 			<!-- bottom line -->
 			<hbox spacing="8" vreduce="true" bg.color="bg_schema" pad.h="6">
-				<label text="labels.mode:" />
+				<label text="labels.mode:"/>
 				<combo id="mode" pad.r="8" pad.v="4"/>
-				<void hexpand="true" />
+				<void hexpand="true"/>
 				<button id="smapply" text="labels.chan.sm_apply" size="22" pad.v="4" ui:inject="Button_green"/>
-				<vsep pad.h="2" bg.color="bg" reduce="true" />
+				<vsep pad.h="2" bg.color="bg" reduce="true"/>
 				<button id="flt" text="labels.filters" size="22" pad.v="4" ui:inject="Button_yellow"/>
 				<button id="crv" text="labels.curve" size="22" pad.v="4" ui:inject="Button_cyan"/>
 			</hbox>
@@ -310,27 +335,9 @@
 
 					<!-- c5 -->
 					<cell rows="4" hreduce="true">
-						<ledmeter angle="1"
-							bg.bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : :const_bg_darken"
-							bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : 0.75">
-							<ledchannel
-								id="blm_${i}l"
-								min="-72 db"
-								max="12 db"
-								log="true"
-								type="rms_peak"
-								peak.visibility="true"
-								value.color="left"
-							/>
-							<ledchannel
-								id="blm_${i}r"
-								min="-72 db"
-								max="12 db"
-								log="true"
-								type="rms_peak"
-								peak.visibility="true"
-								value.color="right"
-							/>
+						<ledmeter angle="1" bg.bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : :const_bg_darken" bright="((${i} ieq 0) or (:frs_${i} igt 0)) ? 1.0 : 0.75">
+							<ledchannel id="blm_${i}l" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="left"/>
+							<ledchannel id="blm_${i}r" min="-72 db" max="12 db" log="true" type="rms_peak" peak.visibility="true" value.color="right"/>
 						</ledmeter>
 					</cell>
 				</ui:for>
