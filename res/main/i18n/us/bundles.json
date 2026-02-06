@@ -1,7 +1,13 @@
 {
 	"crossover": {
-		"name": "Crossover",
-		"description": "This plugin performs split of input signal into separate frequency\nbands passed to individual output channels. Additinally it provides\noutput monitoring channel to control individual channels or result of\nsumming signals passed to individual mono output channels."
+		"description": "This plugin performs split of input signal into separate frequency\nbands passed to individual output channels. Additinally it provides\noutput monitoring channel to control individual channels or result of\nsumming signals passed to individual output channels.",
+		"name": "Crossover"
+	},
+	"launcher": {
+		"crossover_lr": "Split LR",
+		"crossover_mono": "Mono",
+		"crossover_ms": "Split MS",
+		"crossover_stereo": "Stereo"
 	}
 }
 
