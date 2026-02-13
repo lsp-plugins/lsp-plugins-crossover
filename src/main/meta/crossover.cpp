@@ -486,7 +486,7 @@ namespace lsp
             clap_features_mono,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_mono_ports,
-            "util/crossover/mono.xml",
+            "plugins/util/crossover/mono.xml",
             NULL,
             xover_mono_port_groups,
             &crossover_bundle
@@ -517,7 +517,7 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_stereo_ports,
-            "util/crossover/stereo.xml",
+            "plugins/util/crossover/stereo.xml",
             NULL,
             xover_stereo_port_groups,
             &crossover_bundle
@@ -548,7 +548,7 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_lr_ports,
-            "util/crossover/lr.xml",
+            "plugins/util/crossover/lr.xml",
             NULL,
             xover_stereo_port_groups,
             &crossover_bundle
@@ -579,7 +579,7 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_ms_ports,
-            "util/crossover/ms.xml",
+            "plugins/util/crossover/ms.xml",
             NULL,
             xover_ms_port_groups,
             &crossover_bundle
