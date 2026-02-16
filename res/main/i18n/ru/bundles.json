@@ -4,10 +4,9 @@
 		"name": "Кроссовер"
 	},
 	"launcher": {
-		"crossover_lr": "Раздельный ЛП",
+		"crossover_lr": "ЛП",
 		"crossover_mono": "Моно",
-		"crossover_ms": "Раздельный ЦС",
+		"crossover_ms": "ЦС",
 		"crossover_stereo": "Стерео"
 	}
 }
-

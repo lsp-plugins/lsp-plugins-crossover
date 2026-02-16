@@ -489,7 +489,8 @@ namespace lsp
             "plugins/util/crossover/mono.xml",
             NULL,
             xover_mono_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            2
         };
         LSP_REGISTER_METADATA(crossover_mono);
 
@@ -520,7 +521,8 @@ namespace lsp
             "plugins/util/crossover/stereo.xml",
             NULL,
             xover_stereo_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            1
         };
         LSP_REGISTER_METADATA(crossover_stereo);
 
@@ -551,7 +553,8 @@ namespace lsp
             "plugins/util/crossover/lr.xml",
             NULL,
             xover_stereo_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            3
         };
         LSP_REGISTER_METADATA(crossover_lr);
 
@@ -582,7 +585,8 @@ namespace lsp
             "plugins/util/crossover/ms.xml",
             NULL,
             xover_ms_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            4
         };
         LSP_REGISTER_METADATA(crossover_ms);
 

@@ -4,10 +4,9 @@
 		"name": "Crossover"
 	},
 	"launcher": {
-		"crossover_lr": "Split LR",
+		"crossover_lr": "LR",
 		"crossover_mono": "Mono",
 		"crossover_stereo": "Stereo",
-		"crossover_ms": "Split MS"
+		"crossover_ms": "MS"
 	}
 }
-
