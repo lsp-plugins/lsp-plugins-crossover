@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -20,12 +20,13 @@
  */
 
 #include <lsp-plug.in/plug-fw/meta/ports.h>
+#include <lsp-plug.in/plug-fw/meta/registry.h>
 #include <lsp-plug.in/shared/meta/developers.h>
 #include <private/meta/crossover.h>
 
 #define LSP_PLUGINS_CROSSOVER_VERSION_MAJOR       1
 #define LSP_PLUGINS_CROSSOVER_VERSION_MINOR       0
-#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       30
+#define LSP_PLUGINS_CROSSOVER_VERSION_MICRO       31
 
 #define LSP_PLUGINS_CROSSOVER_VERSION  \
     LSP_MODULE_VERSION( \
@@ -485,11 +486,13 @@ namespace lsp
             clap_features_mono,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_mono_ports,
-            "util/crossover/mono.xml",
+            "plugins/util/crossover/mono.xml",
             NULL,
             xover_mono_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            2
         };
+        LSP_REGISTER_METADATA(crossover_mono);
 
         const meta::plugin_t  crossover_stereo =
         {
@@ -515,11 +518,13 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_stereo_ports,
-            "util/crossover/stereo.xml",
+            "plugins/util/crossover/stereo.xml",
             NULL,
             xover_stereo_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            1
         };
+        LSP_REGISTER_METADATA(crossover_stereo);
 
         const meta::plugin_t  crossover_lr =
         {
@@ -545,11 +550,13 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_lr_ports,
-            "util/crossover/lr.xml",
+            "plugins/util/crossover/lr.xml",
             NULL,
             xover_stereo_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            3
         };
+        LSP_REGISTER_METADATA(crossover_lr);
 
         const meta::plugin_t  crossover_ms =
         {
@@ -575,10 +582,13 @@ namespace lsp
             clap_features_stereo,
             E_INLINE_DISPLAY | E_DUMP_STATE,
             crossover_ms_ports,
-            "util/crossover/ms.xml",
+            "plugins/util/crossover/ms.xml",
             NULL,
             xover_ms_port_groups,
-            &crossover_bundle
+            &crossover_bundle,
+            4
         };
+        LSP_REGISTER_METADATA(crossover_ms);
+
     } /* namespace meta */
 } /* namespace lsp */
