@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2025 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2025 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -598,7 +598,7 @@ namespace lsp
                             c->vBands[xsp->nBand].bActive   = true;
                         }
                     if (num_sp > 1)
-                        lsp::qsort_r(sp, num_sp, sizeof(xover_split_t *), compare_splits, NULL);
+                        lsp::ssort_r(sp, num_sp, sizeof(xover_split_t *), compare_splits, NULL);
                     for (size_t i=0; i<=num_sp; ++i)
                     {
                         size_t band = (i > 0) ? sp[i-1]->nBand : 0;
