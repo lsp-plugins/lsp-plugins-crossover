@@ -57,7 +57,6 @@ namespace lsp
 
                     float              *vOut;               // Output channel pointer
                     float              *vResult;            // Result buffer
-                    float              *vTr;                // Transfer function
                     float              *vFc;                // Frequency chart
 
                     bool                bSolo;              // Soloing
@@ -103,7 +102,6 @@ namespace lsp
                     float              *vOutAnalyze;        // Output analysis
                     float              *vBuffer;            // Common data processing buffer
                     float              *vResult;            // Result buffer
-                    float              *vTr;                // Transfer function
                     float              *vFc;                // Frequency chart
 
                     size_t              nAnInChannel;       // Analyzer channel used for input signal analysis

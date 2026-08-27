@@ -30,12 +30,12 @@
 #include <lsp-plug.in/shared/id_colors.h>
 #include <lsp-plug.in/stdlib/math.h>
 
-#define BUFFER_SIZE             0x400U
-
 namespace lsp
 {
     namespace plugins
     {
+        static constexpr size_t         BUFFER_SIZE     = 0x400;
+
         //-------------------------------------------------------------------------
         // Plugin factory
         inline namespace
@@ -123,16 +123,16 @@ namespace lsp
             size_t sz_channels      = align_size(channels * sizeof(channel_t), DEFAULT_ALIGN);
             size_t mesh_size        = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(float), DEFAULT_ALIGN);
             size_t ind_size         = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(uint32_t), DEFAULT_ALIGN);
+            size_t buf_size         = lsp_max(BUFFER_SIZE * sizeof(float), 2 * mesh_size);
 
             size_t to_alloc         = sz_channels +
                                       mesh_size             + // vFreqs
                                       ind_size              + // vIndexes
                                       channels * (
-                                          2 * mesh_size                           +                             // vTr (both complex and real)
-                                          mesh_size                               +                             // vFc (real only)
-                                          BUFFER_SIZE * sizeof(float) * 4         +                             // vInAnalyze, vOutAnalyze, vBuffer, vResult
+                                          mesh_size*2                             +                             // vFc (real only)
+                                          BUFFER_SIZE * sizeof(float) * 3         +                             // vInAnalyze, vOutAnalyze, vResult
+                                          buf_size                                +                             // vBuffer
                                           BUFFER_SIZE * sizeof(float) * meta::crossover_metadata::BANDS_MAX +   // band.vResult
-                                          meta::crossover_metadata::BANDS_MAX * mesh_size * 2 +                 // band.vTr
                                           meta::crossover_metadata::BANDS_MAX * mesh_size                       // band.vFc
                                       );
 
@@ -182,8 +182,7 @@ namespace lsp
                     b->vOut             = NULL;
 
                     b->vResult          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
-                    b->vTr              = advance_ptr_bytes<float>(ptr, mesh_size * 2);           // Transfer buffer
-                    b->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);           // Frequency chart
+                    b->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);         // Frequency chart (real only)
 
                     b->bSolo            = false;
                     b->bMute            = false;
@@ -218,10 +217,9 @@ namespace lsp
                 c->vOut             = NULL;
                 c->vInAnalyze       = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
                 c->vOutAnalyze      = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
-                c->vBuffer          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
+                c->vBuffer          = advance_ptr_bytes<float>(ptr, buf_size);
                 c->vResult          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
-                c->vTr              = advance_ptr_bytes<float>(ptr, mesh_size * 2);
-                c->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);
+                c->vFc              = advance_ptr_bytes<float>(ptr, mesh_size * 2); // Frequency chart (real/complex)
 
                 c->nAnInChannel     = an_cid++;
                 c->nAnOutChannel    = an_cid++;
@@ -415,7 +413,6 @@ namespace lsp
                     c->sXOver.destroy();
                     c->sFFTXOver.destroy();
                     c->vBuffer      = NULL;
-                    c->vTr          = NULL;
 
                     for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                     {
@@ -448,12 +445,38 @@ namespace lsp
 
         inline size_t crossover::crossover_slope(size_t slope)
         {
-            return slope;
+            switch (slope)
+            {
+                case meta::crossover_metadata::CROSS_SLOPE_OFF:     return dspu::CROSS_SLOPE_OFF;
+                case meta::crossover_metadata::CROSS_SLOPE_6DBO:    return dspu::CROSS_SLOPE_6DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_12DBO:   return dspu::CROSS_SLOPE_12DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_18DBO:   return dspu::CROSS_SLOPE_18DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_24DBO:   return dspu::CROSS_SLOPE_24DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_48DBO:   return dspu::CROSS_SLOPE_48DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_72DBO:   return dspu::CROSS_SLOPE_72DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_96DBO:   return dspu::CROSS_SLOPE_96DBO;
+                default: break;
+            }
+
+            return dspu::CROSS_SLOPE_OFF;
         }
 
         inline float crossover::fft_crossover_slope(size_t slope)
         {
-            return (slope == dspu::CROSS_SLOPE_LR2) ? -12.0f : -24.0f * (slope - 1.0f);
+            switch (slope)
+            {
+                case meta::crossover_metadata::CROSS_SLOPE_OFF:     return 0.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_6DBO:    return -6.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_12DBO:   return -12.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_18DBO:   return -18.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_24DBO:   return -24.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_48DBO:   return -48.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_72DBO:   return -72.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_96DBO:   return -96.0f;
+                default: break;
+            }
+
+            return 0.0f;
         }
 
         int crossover::compare_splits(const void *a1, const void *a2, void *data)
@@ -514,7 +537,7 @@ namespace lsp
 
             for (size_t i=0; i<channels; ++i)
             {
-                channel_t *c            = &vChannels[i];
+                channel_t * const c     = &vChannels[i];
                 bool csync              = false;
                 c->sBypass.set_bypass(pBypass->value() >= 0.5f);
                 bool solo               = false;
@@ -569,17 +592,29 @@ namespace lsp
                     // Output band parameters and update sync curve flag
                     for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                     {
-                        xover_band_t *b     = &c->vBands[j];
+                        xover_band_t * const b  = &c->vBands[j];
                         b->pFreqEnd->set_value(xc->get_band_end(j));
                         if (csync)
                         {
                             // Get frequency response for band
-                            xc->freq_chart(j, b->vTr, vFreqs, meta::crossover_metadata::MESH_POINTS);
-                            dsp::pcomplex_mod(b->vFc, b->vTr, meta::crossover_metadata::MESH_POINTS);
+                            if (j == 0)
+                            {
+                                xc->freq_chart(j, c->vFc, vFreqs, meta::crossover_metadata::MESH_POINTS);
+                                dsp::pcomplex_mod(b->vFc, c->vFc, meta::crossover_metadata::MESH_POINTS);
+                            }
+                            else
+                            {
+                                xc->freq_chart(j, c->vBuffer, vFreqs, meta::crossover_metadata::MESH_POINTS);
+                                dsp::pcomplex_mod(b->vFc, c->vBuffer, meta::crossover_metadata::MESH_POINTS);
+                                if (b->bActive)
+                                    dsp::add2(c->vFc, c->vBuffer, meta::crossover_metadata::MESH_POINTS*2);
+                            }
 
                             b->bSyncCurve       = true;
                         }
                     }
+                    // Get final frequency chart
+                    dsp::pcomplex_mod(c->vFc, c->vFc, meta::crossover_metadata::MESH_POINTS);
                 }
                 else
                 {
@@ -655,13 +690,19 @@ namespace lsp
                     if (csync)
                     {
                         // Output band parameters and update sync curve flag
+                        // and compute amplitude response for the whole crossover
                         for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                         {
-                            xover_band_t *b     = &c->vBands[j];
+                            xover_band_t * const b  = &c->vBands[j];
 
                             // Get frequency response for band
                             xf->freq_chart(j, b->vFc, vFreqs, meta::crossover_metadata::MESH_POINTS);
                             b->bSyncCurve       = true;
+
+                            if (j == 0)
+                                dsp::copy(c->vFc, c->vBands[0].vFc, meta::crossover_metadata::MESH_POINTS);
+                            else if (b->bActive)
+                                dsp::add2(c->vFc, b->vFc, meta::crossover_metadata::MESH_POINTS);
                         }
                     }
                 }
@@ -675,18 +716,7 @@ namespace lsp
                 }
 
                 if (csync)
-                {
-                    // Compute amplitude response for the whole crossover
-                    dsp::copy(c->vFc, c->vBands[0].vFc, meta::crossover_metadata::MESH_POINTS);
-                    for (size_t j=1; j<meta::crossover_metadata::BANDS_MAX; ++j)
-                    {
-                        xover_band_t *b     = &c->vBands[j];
-                        if (b->bActive)
-                            dsp::add2(c->vFc, b->vFc, meta::crossover_metadata::MESH_POINTS);
-                    }
-
                     c->bSyncCurve       = true;
-                }
 
                 // Request for redraw
                 if ((csync) && (pWrapper != NULL))
@@ -1216,7 +1246,6 @@ namespace lsp
 
                                     v->write("vOut", b->vOut);
                                     v->write("vResult", b->vResult);
-                                    v->write("vTr", b->vTr);
                                     v->write("vFc", b->vFc);
 
                                     v->write("bSolo", b->bSolo);
@@ -1246,7 +1275,6 @@ namespace lsp
                         v->write("vOutAnalyze", c->vOutAnalyze);
                         v->write("vBuffer", c->vBuffer);
                         v->write("vResult", c->vResult);
-                        v->write("vTr", c->vTr);
                         v->write("vFc", c->vFc);
 
                         v->write("nAnInChannel", c->nAnInChannel);
