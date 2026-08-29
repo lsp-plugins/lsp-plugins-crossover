@@ -70,14 +70,14 @@ namespace lsp
 
         static const port_item_t crossover_slopes[] =
         {
-            { "Off",                "crossover.slope.off"           },
-            { "LR2 12 dB/oct",      "crossover.slope.12dbo"         },
-            { "LR4 24 dB/oct",      "crossover.slope.24dbo"         },
-            { "LR8 48 dB/oct",      "crossover.slope.48dbo"         },
-            { "LR12 72 dB/oct",     "crossover.slope.72dbo"         },
-            { "LR16 96 dB/oct",     "crossover.slope.96dbo"         },
-            { "RLC 6 dB/oct",       "crossover.slope.6dbo"          },
-            { "RLC 18 dB/oct",      "crossover.slope.18dbo"         },
+            { "Off",                "crossover.slope.off",      0   },
+            { "LR2 12 dB/oct",      "crossover.slope.12dbo",    2   },
+            { "LR4 24 dB/oct",      "crossover.slope.24dbo",    4   },
+            { "LR8 48 dB/oct",      "crossover.slope.48dbo",    5   },
+            { "LR12 72 dB/oct",     "crossover.slope.72dbo",    6   },
+            { "LR16 96 dB/oct",     "crossover.slope.96dbo",    7   },
+            { "RLC 6 dB/oct",       "crossover.slope.6dbo",     1   },
+            { "RLC 18 dB/oct",      "crossover.slope.18dbo",    3   },
             { NULL, NULL }
         };
 
@@ -107,7 +107,7 @@ namespace lsp
             METER_GAIN("olm" id, "Output level meter" label, GAIN_AMP_P_24_DB)
 
         #define XOVER_SPLIT(id, label, alias, slope, freq) \
-            COMBO("frs" id, "Frequency range slope" label, "Frq slope" alias, crossover_metadata::CROSS_SLOPE_DFL * slope, crossover_slopes), \
+            COMBO_SORTED("frs" id, "Frequency range slope" label, "Frq slope" alias, crossover_metadata::CROSS_SLOPE_DFL * slope, crossover_slopes), \
             LOG_CONTROL_DFL("sf" id, "Split frequency" label, "Split" alias, U_HZ, crossover_metadata::SPLIT_FREQ, freq)
 
         #define XOVER_BAND(id, label, alias, x, total, fe, fs) \
