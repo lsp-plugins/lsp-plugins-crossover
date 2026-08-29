@@ -166,14 +166,14 @@ namespace lsp
 
                 c->sBypass.construct();
                 c->sXOver.construct();
-                c->sFFTXOver.construct();
+                c->sLPXOver.construct();
 
                 if (!c->sXOver.init(meta::crossover_metadata::BANDS_MAX, BUFFER_SIZE))
                     return;
 
                 for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                 {
-                    xover_band_t *b     = &c->vBands[j];
+                    xover_band_t * const b  = &c->vBands[j];
 
                     c->sXOver.set_handler(j, process_band, this, c);                // Bind channel as a handler
 
@@ -411,7 +411,7 @@ namespace lsp
                     channel_t *c    = &vChannels[i];
 
                     c->sXOver.destroy();
-                    c->sFFTXOver.destroy();
+                    c->sLPXOver.destroy();
                     c->vBuffer      = NULL;
 
                     for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
@@ -553,12 +553,12 @@ namespace lsp
 
                 if (nOpMode == meta::crossover_metadata::CROSS_CLASSIC)
                 {
-                    dspu::Crossover *xc     = &c->sXOver;
+                    dspu::Crossover * const xc  = &c->sXOver;
 
                     // Configure split points for crossover
                     for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX-1; ++i)
                     {
-                        xover_split_t *sp   = &c->vSplit[i];
+                        xover_split_t * const sp    = &c->vSplit[i];
 
                         xc->set_frequency(i, sp->fFreq);
                         xc->set_slope(i, crossover_slope(sp->nSlope));
@@ -568,25 +568,25 @@ namespace lsp
                     // Configure bands (step 1):
                     for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
                     {
-                        xover_band_t *b     = &c->vBands[i];
-                        size_t delay        = dspu::millis_to_samples(fSampleRate, b->pDelay->value());
-                        float gain          = b->pGain->value();
+                        xover_band_t * const b  = &c->vBands[i];
+                        size_t delay            = dspu::millis_to_samples(fSampleRate, b->pDelay->value());
+                        float gain              = b->pGain->value();
 
                         b->sDelay.set_delay(delay);
 
-                        b->bSolo            = b->pSolo->value() >= 0.5f;
+                        b->bSolo                = b->pSolo->value() >= 0.5f;
                         if ((i > 0) && (c->vSplit[i-1].pSlope->value() <= 0))
-                            b->bSolo            = false;
-                        b->bMute            = b->pMute->value() >= 0.5f;
-                        b->fGain            = (b->pPhase->value() >= 0.5f) ? -GAIN_AMP_0_DB : GAIN_AMP_0_DB;
-                        b->bActive          = (i == 0) || (c->vSplit[i-1].nSlope > 0);
-                        solo                = solo || b->bSolo;
+                            b->bSolo                = false;
+                        b->bMute                = b->pMute->value() >= 0.5f;
+                        b->fGain                = (b->pPhase->value() >= 0.5f) ? -GAIN_AMP_0_DB : GAIN_AMP_0_DB;
+                        b->bActive              = (i == 0) || (c->vSplit[i-1].nSlope > 0);
+                        solo                    = solo || b->bSolo;
 
                         xc->set_gain(i, gain);
                     }
 
                     // Reconfigure the crossover
-                    csync   = (sync) || (xc->needs_reconfiguration());
+                    csync   = (csync) || (sync) || (xc->needs_reconfiguration());
                     xc->reconfigure();
 
                     // Output band parameters and update sync curve flag
@@ -618,48 +618,15 @@ namespace lsp
                 }
                 else
                 {
-                    dspu::FFTCrossover *xf  = &c->sFFTXOver;
+                    dspu::LPCrossover *const xf = &c->sLPXOver;
 
-                    // Form the list of splits
-                    for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
-                        c->vBands[j].bActive    = j <= 0;
-                    size_t num_sp   = 0;
-                    xover_split_t *sp[meta::crossover_metadata::BANDS_MAX];
-                    for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX-1; ++j)
-                        if (c->vSplit[j].nSlope > 0)
-                        {
-                            xover_split_t *xsp              = &c->vSplit[j];
-                            sp[num_sp++]                    = xsp;
-                            c->vBands[xsp->nBand].bActive   = true;
-                        }
-                    if (num_sp > 1)
-                        lsp::ssort_r(sp, num_sp, sizeof(xover_split_t *), compare_splits, NULL);
-                    for (size_t i=0; i<=num_sp; ++i)
+                    // Configure split points for crossover
+                    for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX-1; ++i)
                     {
-                        size_t band = (i > 0) ? sp[i-1]->nBand : 0;
-                        xover_band_t *b     = &c->vBands[band];
+                        xover_split_t * const sp    = &c->vSplit[i];
 
-                        if (i > 0)
-                        {
-                            xf->enable_hpf(band, true);
-                            xf->set_hpf_frequency(band, sp[i-1]->fFreq);
-                            xf->set_hpf_slope(band, fft_crossover_slope(sp[i-1]->nSlope));
-                        }
-                        else
-                            xf->disable_hpf(band);
-
-                        if (i < num_sp)
-                        {
-                            xf->enable_lpf(band, true);
-                            xf->set_lpf_frequency(band, sp[i]->fFreq);
-                            xf->set_lpf_slope(band, fft_crossover_slope(sp[i]->nSlope));
-                            b->pFreqEnd->set_value(sp[i]->fFreq);
-                        }
-                        else
-                        {
-                            xf->disable_lpf(band);
-                            b->pFreqEnd->set_value(fSampleRate * 0.5f);
-                        }
+                        xf->set_frequency(i, sp->fFreq);
+                        xf->set_slope(i, fft_crossover_slope(sp->nSlope));
                     }
 
                     // Configure bands (step 1):
@@ -676,15 +643,19 @@ namespace lsp
                             b->bSolo            = false;
                         b->bMute            = b->pMute->value() >= 0.5f;
                         b->fGain            = (b->pPhase->value() >= 0.5f) ? -GAIN_AMP_0_DB : GAIN_AMP_0_DB;
+                        b->bActive          = (i == 0) || (c->vSplit[i-1].nSlope > 0);
                         solo                = solo || b->bSolo;
 
                         // Do we have hi-pass filter?
-                        xf->enable_band(i, b->bActive);
-                        xf->set_gain(i, gain);
+                        if (xf->gain(i) != gain)
+                        {
+                            xf->set_gain(i, gain);
+                            csync               = true;
+                        }
                     }
 
                     // Reconfigure the crossover
-                    csync   = (sync) || (xf->needs_update());
+                    csync   = (csync) || (sync) || (xf->needs_update());
                     xf->update_settings();
 
                     if (csync)
@@ -694,6 +665,7 @@ namespace lsp
                         for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                         {
                             xover_band_t * const b  = &c->vBands[j];
+                            b->pFreqEnd->set_value(xf->band_end(j));
 
                             // Get frequency response for band
                             xf->freq_chart(j, b->vFc, vFreqs, meta::crossover_metadata::MESH_POINTS);
@@ -733,7 +705,7 @@ namespace lsp
             // Report latency
             set_latency(
                 (nOpMode == meta::crossover_metadata::CROSS_CLASSIC) ? 0
-                : vChannels[0].sFFTXOver.latency());
+                : vChannels[0].sLPXOver.latency());
 
             if (redraw)
                 pWrapper->query_display_draw();
@@ -754,15 +726,15 @@ namespace lsp
                 c->sXOver.set_sample_rate(sr);
 
                 // Need to re-initialize FFT crossover?
-                if (fft_rank != c->sFFTXOver.rank())
+                if (fft_rank != c->sLPXOver.rank())
                 {
-                    c->sFFTXOver.init(fft_rank, meta::crossover_metadata::BANDS_MAX);
+                    c->sLPXOver.init(fft_rank, meta::crossover_metadata::BANDS_MAX);
                     for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
-                        c->sFFTXOver.set_handler(j, process_band, this, c);
-                    c->sFFTXOver.set_rank(fft_rank);
-                    c->sFFTXOver.set_phase(float(i) / float(channels));
+                        c->sLPXOver.set_handler(j, process_band, this, c);
+                    c->sLPXOver.set_rank(fft_rank);
+                    c->sLPXOver.set_phase(float(i) / float(channels));
                 }
-                c->sFFTXOver.set_sample_rate(sr);
+                c->sLPXOver.set_sample_rate(sr);
 
                 // Initialize delay line for each band
                 for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
@@ -882,7 +854,7 @@ namespace lsp
                     if (nOpMode == meta::crossover_metadata::CROSS_CLASSIC)
                         c->sXOver.process(c->vBuffer, to_do);
                     else
-                        c->sFFTXOver.process(c->vBuffer, to_do);
+                        c->sLPXOver.process(c->vBuffer, to_do);
                 }
 
                 // Output signal of each band to output buffers
@@ -1213,7 +1185,7 @@ namespace lsp
                     {
                         v->write_object("sBypasss", &c->sBypass);
                         v->write_object("sXOver", &c->sXOver);
-                        v->write_object("sFFTXOver", &c->sFFTXOver);
+                        v->write_object("sLPXOver", &c->sLPXOver);
 
                         v->begin_array("vSplit", c->vSplit, meta::crossover_metadata::BANDS_MAX-1);
                         {
