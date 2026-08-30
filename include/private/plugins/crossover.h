@@ -28,7 +28,7 @@
 #include <lsp-plug.in/dsp-units/util/Analyzer.h>
 #include <lsp-plug.in/dsp-units/util/Crossover.h>
 #include <lsp-plug.in/dsp-units/util/Delay.h>
-#include <lsp-plug.in/dsp-units/util/FFTCrossover.h>
+#include <lsp-plug.in/dsp-units/util/LPCrossover.h>
 
 #include <private/meta/crossover.h>
 
@@ -57,7 +57,6 @@ namespace lsp
 
                     float              *vOut;               // Output channel pointer
                     float              *vResult;            // Result buffer
-                    float              *vTr;                // Transfer function
                     float              *vFc;                // Frequency chart
 
                     bool                bSolo;              // Soloing
@@ -92,7 +91,7 @@ namespace lsp
                 {
                     dspu::Bypass        sBypass;            // Bypass
                     dspu::Crossover     sXOver;             // Crossover module
-                    dspu::FFTCrossover  sFFTXOver;          // Linear-phase crossover module
+                    dspu::LPCrossover   sLPXOver;           // Linear-phase crossover module
 
                     xover_split_t       vSplit[meta::crossover_metadata::BANDS_MAX-1];   // Split bands
                     xover_band_t        vBands[meta::crossover_metadata::BANDS_MAX];     // Crossover bands
@@ -103,7 +102,6 @@ namespace lsp
                     float              *vOutAnalyze;        // Output analysis
                     float              *vBuffer;            // Common data processing buffer
                     float              *vResult;            // Result buffer
-                    float              *vTr;                // Transfer function
                     float              *vFc;                // Frequency chart
 
                     size_t              nAnInChannel;       // Analyzer channel used for input signal analysis

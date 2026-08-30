@@ -34,7 +34,6 @@ namespace lsp
         {
             // Maximum supported number of bands
             static constexpr size_t         BANDS_MAX           = 8;
-            static constexpr size_t         SLOPE_DFL           = 3;
 
             // In/out gain
             static constexpr float          IN_GAIN_DFL         = GAIN_AMP_0_DB;
@@ -87,6 +86,20 @@ namespace lsp
             {
                 CROSS_CLASSIC,
                 CROSS_LINEAR_PHASE
+            };
+
+            enum slope_t
+            {
+                CROSS_SLOPE_OFF,
+                CROSS_SLOPE_12DBO,
+                CROSS_SLOPE_24DBO,
+                CROSS_SLOPE_48DBO,
+                CROSS_SLOPE_72DBO,
+                CROSS_SLOPE_96DBO,
+                CROSS_SLOPE_6DBO,
+                CROSS_SLOPE_18DBO,
+
+                CROSS_SLOPE_DFL = CROSS_SLOPE_48DBO,
             };
         };
 
