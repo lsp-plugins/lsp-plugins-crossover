@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2023 Linux Studio Plugins Project <https://lsp-plug.in/>
- *           (C) 2023 Vladimir Sadovnikov <sadko4u@gmail.com>
+ * Copyright (C) 2026 Linux Studio Plugins Project <https://lsp-plug.in/>
+ *           (C) 2026 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
  * This file is part of lsp-plugins-crossover
  * Created on: 3 авг. 2021 г.
@@ -176,6 +176,7 @@ namespace lsp
                 virtual void        update_settings() override;
                 virtual void        update_sample_rate(long sr) override;
                 virtual void        ui_activated() override;
+                virtual void        ui_deactivated() override;
 
                 virtual void        process(size_t samples) override;
                 virtual bool        inline_display(plug::ICanvas *cv, size_t width, size_t height) override;

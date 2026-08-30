@@ -494,7 +494,6 @@ namespace lsp
         {
             // Determine number of channels
             size_t channels     = (nMode == XOVER_MONO) ? 1 : 2;
-            size_t fft_channels = 0;
             bool sync           = false;
             bool redraw         = false;
 
@@ -506,18 +505,12 @@ namespace lsp
                 // Update analyzer settings
                 sAnalyzer.enable_channel(c->nAnInChannel, c->pFftInSw->value() >= 0.5f);
                 sAnalyzer.enable_channel(c->nAnOutChannel, c->pFftOutSw->value() >= 0.5f);
-
-                if (sAnalyzer.channel_active(c->nAnInChannel))
-                    fft_channels ++;
-                if (sAnalyzer.channel_active(c->nAnOutChannel))
-                    fft_channels ++;
             }
 
             // Update analyzer parameters
             sAnalyzer.set_reactivity(pReactivity->value());
             if (pShiftGain != NULL)
                 sAnalyzer.set_shift(pShiftGain->value() * 100.0f);
-            sAnalyzer.set_activity(fft_channels > 0);
 
             // Update analyzer
             if (sAnalyzer.needs_reconfiguration())
@@ -756,12 +749,14 @@ namespace lsp
 
         void crossover::ui_activated()
         {
+            sAnalyzer.set_activity(true);
+
             // Determine number of channels
             size_t channels     = (nMode == XOVER_MONO) ? 1 : 2;
 
             for (size_t i=0; i<channels; ++i)
             {
-                channel_t *c    = &vChannels[i];
+                channel_t * const c    = &vChannels[i];
                 c->bSyncCurve   = true;
 
                 for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
@@ -770,6 +765,11 @@ namespace lsp
                     xb->bSyncCurve      = true;
                 }
             }
+        }
+
+        void crossover::ui_deactivated()
+        {
+            sAnalyzer.set_activity(false);
         }
 
         void crossover::process_band(void *object, void *subject, size_t band, const float *data, size_t sample, size_t count)
