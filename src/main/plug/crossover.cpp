@@ -450,11 +450,13 @@ namespace lsp
                 case meta::crossover_metadata::CROSS_SLOPE_OFF:     return dspu::CROSS_SLOPE_OFF;
                 case meta::crossover_metadata::CROSS_SLOPE_6DBO:    return dspu::CROSS_SLOPE_6DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_12DBO:   return dspu::CROSS_SLOPE_12DBO;
+                case meta::crossover_metadata::CROSS_SLOPE_PD_12DBO:return dspu::CROSS_SLOPE_PD_12DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_18DBO:   return dspu::CROSS_SLOPE_18DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_24DBO:   return dspu::CROSS_SLOPE_24DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_48DBO:   return dspu::CROSS_SLOPE_48DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_72DBO:   return dspu::CROSS_SLOPE_72DBO;
                 case meta::crossover_metadata::CROSS_SLOPE_96DBO:   return dspu::CROSS_SLOPE_96DBO;
+
                 default: break;
             }
 
@@ -468,6 +470,7 @@ namespace lsp
                 case meta::crossover_metadata::CROSS_SLOPE_OFF:     return 0.0f;
                 case meta::crossover_metadata::CROSS_SLOPE_6DBO:    return -6.0f;
                 case meta::crossover_metadata::CROSS_SLOPE_12DBO:   return -12.0f;
+                case meta::crossover_metadata::CROSS_SLOPE_PD_12DBO:return -12.0f;
                 case meta::crossover_metadata::CROSS_SLOPE_18DBO:   return -18.0f;
                 case meta::crossover_metadata::CROSS_SLOPE_24DBO:   return -24.0f;
                 case meta::crossover_metadata::CROSS_SLOPE_48DBO:   return -48.0f;

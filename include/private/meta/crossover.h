@@ -91,12 +91,13 @@ namespace lsp
             enum slope_t
             {
                 CROSS_SLOPE_OFF,
-                CROSS_SLOPE_12DBO,
+                CROSS_SLOPE_PD_12DBO,
                 CROSS_SLOPE_24DBO,
                 CROSS_SLOPE_48DBO,
                 CROSS_SLOPE_72DBO,
                 CROSS_SLOPE_96DBO,
                 CROSS_SLOPE_6DBO,
+                CROSS_SLOPE_12DBO,
                 CROSS_SLOPE_18DBO,
 
                 CROSS_SLOPE_DFL = CROSS_SLOPE_48DBO,

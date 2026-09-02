@@ -71,12 +71,13 @@ namespace lsp
         static const port_item_t crossover_slopes[] =
         {
             { "Off",                "crossover.slope.off",      0   },
-            { "LR2 12 dB/oct",      "crossover.slope.12dbo",    2   },
+            { "PD2 12 dB/oct",      "crossover.slope.12dbo_pd", 8   },
             { "LR4 24 dB/oct",      "crossover.slope.24dbo",    4   },
             { "LR8 48 dB/oct",      "crossover.slope.48dbo",    5   },
             { "LR12 72 dB/oct",     "crossover.slope.72dbo",    6   },
             { "LR16 96 dB/oct",     "crossover.slope.96dbo",    7   },
             { "RLC 6 dB/oct",       "crossover.slope.6dbo",     1   },
+            { "LR2 12 dB/oct",      "crossover.slope.12dbo",    2   },
             { "RLC 18 dB/oct",      "crossover.slope.18dbo",    3   },
             { NULL, NULL }
         };

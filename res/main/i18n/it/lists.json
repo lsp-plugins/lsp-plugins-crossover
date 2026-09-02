@@ -8,6 +8,7 @@
 		},
 		"slope": {
 			"12dbo": "LR2 12 dB/ott",
+			"12dbo_pd": "PD2 12 dB/ott",
 			"18dbo": "RLC 18 dB/ott",
 			"24dbo": "LR4 24 dB/ott",
 			"48dbo": "LR8 48 dB/ott",
