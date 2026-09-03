@@ -119,22 +119,24 @@ namespace lsp
             plug::Module::init(wrapper, ports);
 
             // Determine number of channels
-            size_t channels         = (nMode == XOVER_MONO) ? 1 : 2;
-            size_t sz_channels      = align_size(channels * sizeof(channel_t), DEFAULT_ALIGN);
-            size_t mesh_size        = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(float), DEFAULT_ALIGN);
-            size_t ind_size         = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(uint32_t), DEFAULT_ALIGN);
-            size_t buf_size         = lsp_max(BUFFER_SIZE * sizeof(float), 2 * mesh_size);
+            const size_t channels       = (nMode == XOVER_MONO) ? 1 : 2;
+            const size_t sz_channels    = align_size(channels * sizeof(channel_t), DEFAULT_ALIGN);
+            const size_t mesh_size      = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(float), DEFAULT_ALIGN);
+            const size_t ind_size       = align_size(meta::crossover_metadata::MESH_POINTS * sizeof(uint32_t), DEFAULT_ALIGN);
+            const size_t buf_size       = lsp_max(BUFFER_SIZE * sizeof(float), 2 * mesh_size);
 
-            size_t to_alloc         = sz_channels +
-                                      mesh_size             + // vFreqs
-                                      ind_size              + // vIndexes
-                                      channels * (
-                                          mesh_size*2                             +                             // vFc (real only)
-                                          BUFFER_SIZE * sizeof(float) * 3         +                             // vInAnalyze, vOutAnalyze, vResult
-                                          buf_size                                +                             // vBuffer
-                                          BUFFER_SIZE * sizeof(float) * meta::crossover_metadata::BANDS_MAX +   // band.vResult
-                                          meta::crossover_metadata::BANDS_MAX * mesh_size                       // band.vFc
-                                      );
+            const size_t to_alloc       = sz_channels +
+                                          mesh_size             + // vFreqs
+                                          ind_size              + // vIndexes
+                                          channels * (
+                                              mesh_size * 2                           +                             // vFc (real only)
+                                              BUFFER_SIZE * sizeof(float) * 3         +                             // vInAnalyze, vOutAnalyze, vResult
+                                              buf_size                                +                             // vBuffer
+                                              BUFFER_SIZE * sizeof(float) * meta::crossover_metadata::BANDS_MAX +   // band.vResult
+                                              meta::crossover_metadata::BANDS_MAX * (
+                                                  mesh_size                                                         // band.vFc
+                                              )
+                                          );
 
             // Initialize analyzer
             size_t an_cid           = 0;
@@ -182,7 +184,7 @@ namespace lsp
                     b->vOut             = NULL;
 
                     b->vResult          = advance_ptr_bytes<float>(ptr, BUFFER_SIZE * sizeof(float));
-                    b->vFc              = advance_ptr_bytes<float>(ptr, mesh_size);         // Frequency chart (real only)
+                    b->vFc              = advance_ptr_bytes<float>(ptr, mesh_size); // Frequency chart (magnitude)
 
                     b->bSolo            = false;
                     b->bMute            = false;
@@ -586,12 +588,13 @@ namespace lsp
                     xc->reconfigure();
 
                     // Output band parameters and update sync curve flag
-                    for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
+                    if (csync)
                     {
-                        xover_band_t * const b  = &c->vBands[j];
-                        b->pFreqEnd->set_value(xc->get_band_end(j));
-                        if (csync)
+                        for (size_t j=0; j<meta::crossover_metadata::BANDS_MAX; ++j)
                         {
+                            xover_band_t * const b  = &c->vBands[j];
+                            b->pFreqEnd->set_value(xc->get_band_end(j));
+
                             // Get frequency response for band
                             if (j == 0)
                             {
@@ -608,9 +611,10 @@ namespace lsp
 
                             b->bSyncCurve       = true;
                         }
+
+                        // Get final frequency chart
+                        dsp::pcomplex_mod(c->vFc, c->vFc, meta::crossover_metadata::MESH_POINTS);
                     }
-                    // Get final frequency chart
-                    dsp::pcomplex_mod(c->vFc, c->vFc, meta::crossover_metadata::MESH_POINTS);
                 }
                 else
                 {
@@ -675,6 +679,13 @@ namespace lsp
                     }
                 }
 
+                if (csync)
+                    c->bSyncCurve       = true;
+
+                // Request for redraw
+                if ((csync) && (pWrapper != NULL))
+                    redraw              = true;
+
                 // Configure bands (step 2):
                 for (size_t i=0; i<meta::crossover_metadata::BANDS_MAX; ++i)
                 {
@@ -682,13 +693,6 @@ namespace lsp
                     if ((solo) && (!b->bSolo))
                         b->bMute            = true;
                 }
-
-                if (csync)
-                    c->bSyncCurve       = true;
-
-                // Request for redraw
-                if ((csync) && (pWrapper != NULL))
-                    redraw              = true;
             }
 
             // Global parameters
