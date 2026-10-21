@@ -9,6 +9,7 @@
 * Fixed implementation of LR2 filters which caused some kind of phase distortion.
   The previous implementation (special PD2 mode) has been kept for backwared
   compatibility.
+* Updated build scripts and dependencies.
 
 === 1.0.36 ===
 * Updated build scripts and dependencies.
