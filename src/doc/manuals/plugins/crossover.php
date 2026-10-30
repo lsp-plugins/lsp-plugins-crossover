@@ -74,7 +74,18 @@
 </ul>
 <p><b>'Processor' section:</b></p>
 <ul>
-	<li><b>Slope</b> - allows to select the slope of filters attached to corresponding frequency band or disable the frequency band.</li>
+	<li><b>Slope</b> - allows to select the slope of filters attached to corresponding frequency band or disable the frequency band:</li>
+	<ul>
+		<li><b>Off</b> - the frequency band is disabled.</li>
+		<li><b>RLC 6 dB/oct</b> - Simple 1-pole filters is used with 6 dB/octave slope.</li>
+		<li><b>LR2 12 dB/oct</b> - Linkwitz-Riley filters is used with 12 dB/octave slope.</li>
+		<li><b>RLC 18 dB/oct</b> - Simple 3-pole filter is used with 18 dB/octave slope.</li>
+		<li><b>LR4 24 dB/oct</b> - 4-pole Linkwitz-Riley filters are used with 24 dB/octave slope.</li>
+		<li><b>LR4 48 dB/oct</b> - 8-pole Linkwitz-Riley filters are used with 48 dB/octave slope.</li>
+		<li><b>LR4 72 dB/oct</b> - 12-pole Linkwitz-Riley filters are used with 72 dB/octave slope.</li>
+		<li><b>LR4 96 dB/oct</b> - 16-pole Linkwitz-Riley filters are used with 96 dB/octave slope.</li>
+		<li><b>PD2 12 dB/oct</b> - A special phase-distorted version of legacy implementation of LR2 filters with 180 degree phase shift on each frequency split (works only in Classic mode, is same to LR2 for Linear Phase mode).</li>
+	</ul>
 	<li><b>Range</b> - allows to adjust the frequency range for each band.</li>
 	<li><b>Gain</b> - adjusts gain to the corresponding frequency band.</li>
 	<li><b>Solo</b> - enables soloing of the corresponding frequency band for the monitoring channel.</li>
