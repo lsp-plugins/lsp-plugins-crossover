@@ -2,6 +2,9 @@
 * RECENT CHANGES
 *******************************************************************************
 
+=== 1.0.38 ===
+
+
 === 1.0.37 ===
 * Reduced memory consumption by the plugin (removed some unneeded buffers).
 * Added 6 dB/octave and 18 dB/octave crossover filters.
